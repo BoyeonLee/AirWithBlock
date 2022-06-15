@@ -15,6 +15,7 @@ import {
 import Postcode from "./../components/Postcode";
 import axios from "axios";
 import Swal from "sweetalert2";
+import imageCompression from "browser-image-compression";
 
 const Register = ({ account }) => {
   const [imageUrl, setImageUrl] = useState("");
@@ -39,6 +40,21 @@ const Register = ({ account }) => {
         resolve();
       };
     });
+  };
+
+  const onResizeImage = async (image) => {
+    const options = {
+      maxSizeMB: 0.5,
+      maxWidthOrHeight: 300,
+    };
+
+    try {
+      const compressedFile = await imageCompression(image, options);
+      console.log(compressedFile);
+      setImageFile(compressedFile);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onClickFileBtn = (e) => {
@@ -101,7 +117,8 @@ const Register = ({ account }) => {
                 name="image"
                 onChange={(e) => {
                   onChangeImage(e.target.files[0]);
-                  setImageFile(e.target.files[0]);
+                  onResizeImage(e.target.files[0]);
+                  console.log(e.target.files[0]);
                 }}
                 style={{ display: "none" }}
               ></Input>

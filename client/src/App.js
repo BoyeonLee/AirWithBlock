@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Host from "./routes/host";
 import Register from "./routes/register";
+import Main from "./routes/main";
 import Caver from "caver-js";
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
     <BrowserRouter>
       <Layout>
         <Routes>
-          {/* <Route path="/" element={<Main />} /> */}
+          <Route path="/" element={<Main />} />
           <Route path="/host" element={<Host />} />
           <Route path="/host/register" element={<Register account={account} />} />
         </Routes>
