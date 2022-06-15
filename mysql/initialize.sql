@@ -1,4 +1,3 @@
-drop database if exits airwithblock_db;
 create database airwithblock_db;
 use airwithblock_db;
 
@@ -8,7 +7,7 @@ CREATE TABLE `Products` (
   `product_type` varchar(255) NOT NULL,
   `product_name` varchar(255) NOT NULL,
   `product_contents` text NOT NULL,
-  `product_image` varchar(255) NOT NULL,
+  `product_image` longblob NOT NULL,
   `people_number` int NOT NULL,
   `postal_code` int NOT NULL,
   `basic_addr` varchar(255) NOT NULL,
