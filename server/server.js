@@ -1,6 +1,7 @@
 const express = require("express");
-const hostRouter = require("./Router/host");
 const cors = require("cors");
+const hostRouter = require("./Router/host");
+const mainRouter = require("./Router/main");
 
 const app = express();
 
@@ -10,6 +11,7 @@ app.use(
     credentials: true,
   })
 );
+app.use("/", mainRouter);
 app.use("/host", hostRouter);
 
 const port = 5000;
