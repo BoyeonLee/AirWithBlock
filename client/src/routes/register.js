@@ -44,8 +44,8 @@ const Register = ({ account }) => {
 
   const onResizeImage = async (image) => {
     const options = {
-      maxSizeMB: 0.5,
-      maxWidthOrHeight: 300,
+      maxSizeMB: 1,
+      maxWidthOrHeight: 500,
     };
 
     try {
@@ -86,11 +86,14 @@ const Register = ({ account }) => {
       url: "http://localhost:5000/host/register",
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
-    }).then((response) => {
-      if (response.data.success) {
-        Swal.fire({ icon: "success", title: response.data.message, width: 600 });
+    }).then((res) => {
+      if (res.data.success) {
+        const id = res.data.product_id;
+        Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
+          window.location.href = `/detail/${id}`;
+        });
       } else {
-        console.log(response.data);
+        console.log(res.data);
       }
     });
   };

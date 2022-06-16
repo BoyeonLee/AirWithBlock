@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import ProductCard from "./../components/ProductCard";
-import { Box, Grid } from "@chakra-ui/react";
+import { Grid } from "@chakra-ui/react";
 import axios from "axios";
 
 const Main = () => {
@@ -24,10 +24,12 @@ const Main = () => {
   }, []);
 
   return (
-    <Grid templateColumns="repeat(4, 1fr)" gap="2vw" mt="1vw">
+    <Grid templateColumns="repeat(4, 1fr)" gap="2vw">
       {productArray &&
         productArray.map((v, i) => {
-          return <ProductCard key={i} mainImage={v.image} name={v.name} price={v.price} />;
+          return (
+            <ProductCard key={i} id={v.id} mainImage={v.image} name={v.name} price={v.price} />
+          );
         })}
     </Grid>
   );

@@ -1,4 +1,4 @@
-import { Stack, Flex, Box, Text, Button } from "@chakra-ui/react";
+import { Stack, Flex, Box, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 function Layout({ children }) {

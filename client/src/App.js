@@ -4,6 +4,7 @@ import Layout from "./components/Layout";
 import Host from "./routes/host";
 import Register from "./routes/register";
 import Main from "./routes/main";
+import Detail from "./routes/detail";
 import Caver from "caver-js";
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route path="/host" element={<Host />} />
           <Route path="/host/register" element={<Register account={account} />} />
+          <Route path="/detail/:product_id" element={<Detail account={account} />} />
         </Routes>
       </Layout>
     </BrowserRouter>
