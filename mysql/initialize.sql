@@ -29,7 +29,8 @@ CREATE TABLE `Reservation` (
   `owner_account` varchar(255),
   `buyer_account` varchar(255) NOT NULL,
   `buyer_publickey` varchar(255) NOT NULL,
-  `reservation_date` date NOT NULL,
+  `checkin` date NOT NULL,
+  `checkout` date NOT NULL,
   `reservation_day` int NOT NULL
 );
 
