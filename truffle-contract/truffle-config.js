@@ -37,7 +37,7 @@ module.exports = {
   networks: {
     baobab: {
       provider: () => {
-        return new HDWalletProvider(private_key, "https://api.baobab.klaytn.net:8651");
+        return new HDWalletProvider(private_key, "https://api.baobab.klaytn.net:8651/");
       },
       network_id: "1001",
       gas: "8500000",
