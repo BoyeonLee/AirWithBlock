@@ -80,11 +80,8 @@ router.post("/get_keys", async (req, res) => {
               },
             },
             (err, publicKey, privateKey) => {
-              const public_key = publicKey.substring(27).split("-")[0].replace(/\n/g, "");
-              const private_key = privateKey.substring(37).split("-")[0].replace(/\n/g, "");
-
               const sql = "INSERT INTO Users (account, public_key, private_key) VALUES (?,?,?)";
-              const params = [account.toString(), public_key, private_key];
+              const params = [account.toString(), publicKey, privateKey];
               con.query(sql, params, async (err, rows, fields) => {
                 if (err) {
                   res.send({ success: fail, message: err });
