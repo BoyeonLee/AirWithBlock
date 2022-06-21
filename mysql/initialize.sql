@@ -3,7 +3,7 @@ use airwithblock_db;
 
 CREATE TABLE `Products` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `owner_account` varchar(255) NOT NULL,
+  `owner_account` varbinary(255) NOT NULL,
   `product_type` varchar(255) NOT NULL,
   `product_name` varchar(255) NOT NULL,
   `product_contents` text NOT NULL,
@@ -26,12 +26,18 @@ CREATE TABLE `Password` (
 CREATE TABLE `Reservation` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `product_id` int NOT NULL,
-  `owner_account` varchar(255),
-  `buyer_account` varchar(255) NOT NULL,
+  `owner_account` varbinary(255) NOT NULL,
+  `buyer_account` varbinary(255) NOT NULL,
   `buyer_publickey` varchar(255) NOT NULL,
   `checkin` date NOT NULL,
   `checkout` date NOT NULL,
   `reservation_day` int NOT NULL
+);
+
+CREATE TABLE `Users` (
+  `account` varbinary(255) NOT NULL,
+  `public_key` text NOT NULL,
+  `private_key` text NOT NULL
 );
 
 ALTER TABLE `Password` ADD FOREIGN KEY (`product_id`) REFERENCES `Products` (`id`);
