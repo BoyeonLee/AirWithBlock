@@ -3,7 +3,7 @@ import ProductCard from "./../components/ProductCard";
 import { Grid } from "@chakra-ui/react";
 import axios from "axios";
 
-const Main = () => {
+const Main = ({ account }) => {
   const [productArray, setProductArray] = useState([]);
 
   const getProductInfo = async () => {

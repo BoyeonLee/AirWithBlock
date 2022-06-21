@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const hostRouter = require("./Router/host");
@@ -12,6 +13,9 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use("/", mainRouter);
 app.use("/host", hostRouter);
 app.use("/detail", detailRouter);
