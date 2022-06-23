@@ -5,8 +5,12 @@ import Swal from "sweetalert2";
 import Location from "./../components/Location";
 import axios from "axios";
 
+import Caver from "caver-js";
+import { contractABI, contractAddress } from "./../contract/transferContract";
+
 const Detail = ({ account }) => {
   const product_id = useParams().product_id;
+  const [ownerAccount, setOwnerAccount] = useState("");
   const [checkIn, setCheckIn] = useState();
   const [checkOut, setCheckOut] = useState();
   const [image, setImage] = useState();
@@ -19,6 +23,8 @@ const Detail = ({ account }) => {
   const [detailAddr, setDetailAddr] = useState("");
   const [price, setPrice] = useState();
   const [reserveArray, setReserveArray] = useState([]);
+  const [totalPrice, setTotalPrice] = useState();
+  const [reservationDay, setReservationDay] = useState();
 
   const onChangeCheckOut = (e) => {
     const date = e.target.value;
@@ -37,6 +43,7 @@ const Detail = ({ account }) => {
     }).then((res) => {
       if (res.data.success) {
         setImage(res.data.infoArray[0].image);
+        setOwnerAccount(res.data.infoArray[0].info.owner_account);
         setName(res.data.infoArray[0].info.product_name);
         setContents(res.data.infoArray[0].info.product_contents);
         setPerson(res.data.infoArray[0].info.people_number);
@@ -59,6 +66,64 @@ const Detail = ({ account }) => {
         console.log(res.data);
       }
     });
+  };
+
+  const checkReservation = () => {
+    const check_in = new Date(checkIn);
+    const check_out = new Date(checkOut);
+    const difference = Math.abs(check_out - check_in);
+    const days = difference / (1000 * 3600 * 24);
+    setReservationDay(days);
+    setTotalPrice(days * price);
+  };
+
+  const makeReservation = async () => {
+    const s = String.fromCharCode.apply(null, ownerAccount.data);
+    const owner_account = decodeURIComponent(s);
+
+    const caver = new Caver(window.klaytn);
+    const contract = caver.contract.create(contractABI, contractAddress);
+
+    caver.klay
+      .sendTransaction({
+        type: "SMART_CONTRACT_EXECUTION",
+        from: window.klaytn.selectedAddress,
+        to: contractAddress,
+        data: contract.methods.transferToContract(owner_account).encodeABI(),
+        value: caver.utils.toPeb(totalPrice, "KLAY"),
+        gas: 8000000,
+      })
+      .on("transactionHash", (hash) => {
+        console.log(hash);
+      })
+      .on("receipt", (receipt) => {
+        console.log(receipt);
+      })
+      .on("error", (e) => {
+        console.log(e);
+      });
+
+    const data = {
+      product_id: product_id,
+      owner_account: owner_account,
+      buyer_account: account,
+      check_in: checkIn,
+      check_out: checkOut,
+      reservation_day: reservationDay,
+      total_price: totalPrice,
+    };
+
+    // await axios({
+    //   method: "POST",
+    //   url: "http://localhost:5000/reserve",
+    //   data: data,
+    // }).then((res) => {
+    //   if (res.data.success) {
+    //     alert(res.data);
+    //   } else {
+    //     console.log(res.data);
+    //   }
+    // });
   };
 
   useEffect(() => {
@@ -190,7 +255,7 @@ const Detail = ({ account }) => {
             <Input type="date" value={checkOut} onChange={onChangeCheckOut}></Input>
           </Flex>
           <Box textAlign="center">
-            <Button colorScheme="pink" size="md">
+            <Button colorScheme="pink" size="md" onClick={checkReservation}>
               예약 가능 여부
             </Button>
           </Box>
@@ -206,11 +271,11 @@ const Detail = ({ account }) => {
               borderRadius="1vh"
               textAlign="center"
             >
-              <Text fontSize="3xl">200 KLAY</Text>
+              <Text fontSize="3xl">{totalPrice} KLAY</Text>
             </Box>
           </Flex>
           <Box textAlign="center">
-            <Button colorScheme="purple" size="lg">
+            <Button colorScheme="purple" size="lg" onClick={makeReservation}>
               예약하기
             </Button>
           </Box>
