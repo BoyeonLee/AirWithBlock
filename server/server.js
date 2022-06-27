@@ -4,6 +4,7 @@ const cors = require("cors");
 const hostRouter = require("./Router/host");
 const mainRouter = require("./Router/main");
 const detailRouter = require("./Router/detail");
+const reserveRouter = require("./Router/reserve");
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", mainRouter);
 app.use("/host", hostRouter);
 app.use("/detail", detailRouter);
+app.use("/reserve", reserveRouter);
 
 const port = 5000;
 app.listen(port, () => {
