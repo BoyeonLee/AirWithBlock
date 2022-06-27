@@ -8,11 +8,17 @@ import axios from "axios";
 import Caver from "caver-js";
 import { contractABI, contractAddress } from "./../contract/transferContract";
 
+import DatePicker, { registerLocale } from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "./../css/datepicker.css";
+import ko from "date-fns/locale/ko";
+registerLocale("ko", ko);
+
 const Detail = ({ account }) => {
   const product_id = useParams().product_id;
   const [ownerAccount, setOwnerAccount] = useState("");
-  const [checkIn, setCheckIn] = useState();
-  const [checkOut, setCheckOut] = useState();
+  const [checkIn, setCheckIn] = useState(new Date());
+  const [checkOut, setCheckOut] = useState(new Date(new Date().setDate(new Date().getDate() + 1)));
   const [image, setImage] = useState();
   const [name, setName] = useState("");
   const [contents, setContents] = useState("");
@@ -22,19 +28,10 @@ const Detail = ({ account }) => {
   const [basicAddr, setBasicAddr] = useState("");
   const [detailAddr, setDetailAddr] = useState("");
   const [price, setPrice] = useState();
-  const [reserveArray, setReserveArray] = useState([]);
   const [totalPrice, setTotalPrice] = useState();
   const [reservationDay, setReservationDay] = useState();
-
-  const onChangeCheckOut = (e) => {
-    const date = e.target.value;
-    if (date <= checkIn) {
-      Swal.fire({ icon: "error", title: "날짜를 다시 선택해주세요.", width: 600 });
-      setCheckOut("");
-    } else {
-      setCheckOut(date);
-    }
-  };
+  const [checkInArray, setCheckInArray] = useState([]);
+  const [checkOutArray, setCheckOutArray] = useState([]);
 
   const getProductDetail = async () => {
     await axios({
@@ -51,6 +48,8 @@ const Detail = ({ account }) => {
         setBasicAddr(res.data.infoArray[0].info.basic_addr);
         setDetailAddr(res.data.infoArray[0].info.detailed_addr);
         setPrice(res.data.infoArray[0].info.price);
+        setCheckInArray(res.data.checkInArray);
+        setCheckOutArray(res.data.checkOutArray);
 
         const product_type = res.data.infoArray[0].info.product_type;
         if (product_type === "apt") {
@@ -68,62 +67,93 @@ const Detail = ({ account }) => {
     });
   };
 
-  const checkReservation = () => {
-    const check_in = new Date(checkIn);
-    const check_out = new Date(checkOut);
+  const getMinDate = () => {
+    const today = new Date();
+    while (!checkInArray.includes(getDate(today))) {
+      const next = new Date(today.setDate(today.getDate() + 1));
+      today = next;
+    }
+    return today;
+  };
+
+  const getDate = (date) => {
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+
+    const dateString = year + "-" + month + "-" + day;
+    return dateString;
+  };
+
+  const checkTotalPrice = () => {
+    const check_in = new Date(getDate(checkIn));
+    const check_out = new Date(getDate(checkOut));
     const difference = Math.abs(check_out - check_in);
     const days = difference / (1000 * 3600 * 24);
     setReservationDay(days);
     setTotalPrice(days * price);
+
+    console.log(checkInArray);
   };
 
   const makeReservation = async () => {
     const s = String.fromCharCode.apply(null, ownerAccount.data);
     const owner_account = decodeURIComponent(s);
 
+    const checkIn_date = new Date(getDate(checkIn)).getTime() / 100000;
+
     const caver = new Caver(window.klaytn);
     const contract = caver.contract.create(contractABI, contractAddress);
+
+    const caver_event = new Caver("https://api.baobab.klaytn.net:8651/");
+    const contract_event = new caver_event.klay.Contract(contractABI, contractAddress);
 
     caver.klay
       .sendTransaction({
         type: "SMART_CONTRACT_EXECUTION",
         from: window.klaytn.selectedAddress,
         to: contractAddress,
-        data: contract.methods.transferToContract(owner_account).encodeABI(),
+        data: contract.methods
+          .transferToContract(owner_account, parseInt(product_id), checkIn_date)
+          .encodeABI(),
         value: caver.utils.toPeb(totalPrice, "KLAY"),
         gas: 8000000,
       })
-      .on("transactionHash", (hash) => {
-        console.log(hash);
-      })
-      .on("receipt", (receipt) => {
-        console.log(receipt);
+      .on("receipt", async (receipt) => {
+        if (receipt.status) {
+          const fromBlock = receipt.blockNumber - 1;
+          const event = await contract_event.getPastEvents("TransferToContract", {
+            filter: { owner: owner_account, product_id: parseInt(product_id), date: checkIn_date },
+            fromBlock,
+          });
+          const reservationMappingId = parseInt(event[0].returnValues.reservationId);
+
+          const data = {
+            product_id: parseInt(product_id),
+            owner_account: owner_account,
+            buyer_account: account,
+            reservation_id: reservationMappingId,
+            check_in: getDate(checkIn),
+            check_out: getDate(checkOut),
+            reservation_day: reservationDay,
+          };
+
+          await axios({
+            method: "POST",
+            url: "http://localhost:5000/reserve",
+            data: data,
+          }).then((res) => {
+            if (res.data.success) {
+              Swal.fire({ icon: "success", title: res.data.message, width: 600 });
+            } else {
+              console.log(res.data);
+            }
+          });
+        }
       })
       .on("error", (e) => {
         console.log(e);
       });
-
-    const data = {
-      product_id: product_id,
-      owner_account: owner_account,
-      buyer_account: account,
-      check_in: checkIn,
-      check_out: checkOut,
-      reservation_day: reservationDay,
-      total_price: totalPrice,
-    };
-
-    // await axios({
-    //   method: "POST",
-    //   url: "http://localhost:5000/reserve",
-    //   data: data,
-    // }).then((res) => {
-    //   if (res.data.success) {
-    //     alert(res.data);
-    //   } else {
-    //     console.log(res.data);
-    //   }
-    // });
   };
 
   useEffect(() => {
@@ -240,23 +270,39 @@ const Detail = ({ account }) => {
             <Box w="6vw" h="4vh">
               <Text fontSize="2xl">체크인</Text>
             </Box>
-            <Input
-              type="date"
-              value={checkIn}
-              onChange={(e) => {
-                setCheckIn(e.target.value);
-              }}
-            ></Input>
+            <DatePicker
+              className="outline"
+              locale="ko"
+              selected={checkIn}
+              onChange={(date) => setCheckIn(date)}
+              selectsStart
+              startDate={checkIn}
+              endDate={checkOut}
+              minDate={getMinDate}
+              dateFormat="yyyy-MM-dd"
+              excludeDates={checkInArray.map((date) => new Date(date))}
+            />
           </Flex>
           <Flex mb="1vw">
             <Box w="8vw" h="4vh">
               <Text fontSize="2xl">체크아웃</Text>
             </Box>
-            <Input type="date" value={checkOut} onChange={onChangeCheckOut}></Input>
+            <DatePicker
+              className="outline"
+              locale="ko"
+              selected={checkOut}
+              onChange={(date) => setCheckOut(date)}
+              selectsEnd
+              startDate={checkIn}
+              endDate={checkOut}
+              minDate={checkIn}
+              dateFormat="yyyy-MM-dd"
+              excludeDates={checkOutArray.map((date) => new Date(date))}
+            />
           </Flex>
           <Box textAlign="center">
-            <Button colorScheme="pink" size="md" onClick={checkReservation}>
-              예약 가능 여부
+            <Button colorScheme="pink" size="md" onClick={checkTotalPrice}>
+              총 가격
             </Button>
           </Box>
           <Flex mt="2vw" mb="1vw">
