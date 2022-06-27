@@ -26,16 +26,16 @@ CREATE TABLE `Password` (
 CREATE TABLE `Reservation` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `product_id` int NOT NULL,
+  `reservationMapping_id` int NOT NULL,
   `owner_account` varbinary(255) NOT NULL,
   `buyer_account` varbinary(255) NOT NULL,
-  `buyer_publickey` varchar(255) NOT NULL,
   `checkin` date NOT NULL,
   `checkout` date NOT NULL,
   `reservation_day` int NOT NULL
 );
 
 CREATE TABLE `Users` (
-  `account` varbinary(255) NOT NULL,
+  `account` varbinary(255) PRIMARY KEY,
   `public_key` text NOT NULL,
   `private_key` text NOT NULL
 );
@@ -45,5 +45,7 @@ ALTER TABLE `Password` ADD FOREIGN KEY (`product_id`) REFERENCES `Products` (`id
 ALTER TABLE `Password` ADD FOREIGN KEY (`reservation_id`) REFERENCES `Reservation` (`id`);
 
 ALTER TABLE `Reservation` ADD FOREIGN KEY (`product_id`) REFERENCES `Products` (`id`);
+
+ALTER TABLE `Reservation` ADD FOREIGN KEY (`buyer_account`) REFERENCES `Users` (`account`);
 
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '008526';
