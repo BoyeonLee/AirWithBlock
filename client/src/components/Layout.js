@@ -21,7 +21,7 @@ function Layout({ children }) {
               호스트 되기
             </Text>
           </Link>
-          <Link to="/myreservation">
+          <Link to="/my-reservation">
             <Text fontWeight="bold" fontSize="3xl" color="#495057">
               나의 예약
             </Text>
