@@ -12,17 +12,6 @@ const ReservationCard = ({ id, image, name, checkin, checkout }) => {
     }
   };
 
-  const getDate = (date) => {
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + date.getDate()).slice(-2);
-
-    const dateString = year + "/" + month + "/" + day;
-    return dateString;
-  };
-  const re_checkin = getDate(new Date(checkin));
-  const re_checkout = getDate(new Date(checkout));
-
   useEffect(() => {
     checkPast();
   }, [checkout]);
@@ -38,7 +27,7 @@ const ReservationCard = ({ id, image, name, checkin, checkout }) => {
           {name}
         </Text>
         <Text fontSize="xl">
-          예약 날짜 : {re_checkin} ~ {re_checkout}
+          예약 날짜 : {checkin} ~ {checkout}
         </Text>
       </Box>
     </Box>
