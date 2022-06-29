@@ -61,6 +61,20 @@ const Detail = ({ account }) => {
         } else if (product_type === "etc") {
           setType("기타");
         }
+
+        let today_string = getDate(new Date());
+        let today = new Date();
+        if (res.data.checkInArray !== []) {
+          for (let i = 0; i < res.data.checkInArray.length; i++) {
+            if (res.data.checkInArray[i] === today_string) {
+              today = new Date(today.setDate(today.getDate() + 1));
+              today_string = getDate(today);
+            }
+          }
+          const tomorrow = new Date(today.setDate(today.getDate() + 1));
+          setCheckIn(new Date(today_string));
+          setCheckOut(new Date(getDate(tomorrow)));
+        }
       } else {
         console.log(res.data);
       }
@@ -68,7 +82,7 @@ const Detail = ({ account }) => {
   };
 
   const getMinDate = () => {
-    const today = new Date();
+    let today = new Date();
     while (!checkInArray.includes(getDate(today))) {
       const next = new Date(today.setDate(today.getDate() + 1));
       today = next;
@@ -92,8 +106,6 @@ const Detail = ({ account }) => {
     const days = difference / (1000 * 3600 * 24);
     setReservationDay(days);
     setTotalPrice(days * price);
-
-    console.log(checkInArray);
   };
 
   const makeReservation = async () => {
@@ -144,7 +156,9 @@ const Detail = ({ account }) => {
             data: data,
           }).then((res) => {
             if (res.data.success) {
-              Swal.fire({ icon: "success", title: res.data.message, width: 600 });
+              Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
+                window.location.href = "/my-reservation";
+              });
             } else {
               console.log(res.data);
             }
@@ -274,7 +288,9 @@ const Detail = ({ account }) => {
               className="outline"
               locale="ko"
               selected={checkIn}
-              onChange={(date) => setCheckIn(date)}
+              onChange={(date) => {
+                setCheckIn(date);
+              }}
               selectsStart
               startDate={checkIn}
               endDate={checkOut}
@@ -291,7 +307,9 @@ const Detail = ({ account }) => {
               className="outline"
               locale="ko"
               selected={checkOut}
-              onChange={(date) => setCheckOut(date)}
+              onChange={(date) => {
+                setCheckOut(date);
+              }}
               selectsEnd
               startDate={checkIn}
               endDate={checkOut}
