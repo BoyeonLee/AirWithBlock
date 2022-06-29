@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Box, Flex, Text, Link } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 const ReservationCard = ({ id, image, name, checkin, checkout }) => {
   const [isPast, setIsPast] = useState(false);
@@ -17,7 +18,7 @@ const ReservationCard = ({ id, image, name, checkin, checkout }) => {
   }, [checkout]);
   return (
     <Box w="17vw" h="35vh" bg="pink.50" opacity={isPast ? "0.6" : ""}>
-      <Link to={`detail/${id}`}>
+      <Link to={`/detail/${id}`}>
         <Flex w="14vw" h="18vh" m="2vw auto 0 auto" justify="center">
           <img src={image} alt="main_image"></img>
         </Flex>
