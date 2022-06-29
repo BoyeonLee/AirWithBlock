@@ -24,7 +24,7 @@ const Main = ({ account }) => {
   }, []);
 
   return (
-    <Grid templateColumns="repeat(4, 1fr)" gap="2vw">
+    <Grid templateColumns="repeat(4, 1fr)" gap="2vw" w="75vw" h="78vh">
       {productArray &&
         productArray.map((v, i) => {
           return (
