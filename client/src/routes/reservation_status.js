@@ -31,7 +31,9 @@ const ReservationStatus = ({ account }) => {
             return (
               <ReserveStatusCard
                 key={i}
-                id={v.id}
+                owner_account={account}
+                reservation_id={v.reservation_id}
+                product_id={v.product_id}
                 image={v.image}
                 name={v.name}
                 checkin={v.checkin}
