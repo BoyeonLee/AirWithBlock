@@ -20,7 +20,7 @@ CREATE TABLE `Password` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `product_id` int NOT NULL,
   `reservation_id` int NOT NULL,
-  `password` varchar(255)
+  `password` text NOT NULL
 );
 
 CREATE TABLE `Reservation` (
