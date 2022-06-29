@@ -1,5 +1,15 @@
 import { useState } from "react";
-import { Heading, Box, Flex, Text, Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import {
+  Heading,
+  Box,
+  Flex,
+  Text,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  CloseButton,
+} from "@chakra-ui/react";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
 import axios from "axios";
@@ -14,10 +24,12 @@ const ReserveStatusCard = ({
   checkin,
   checkout,
   totalPrice,
+  disabled,
 }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
+  const [disabledState, setDisabledState] = useState(disabled);
 
   const modalStyle = {
     overlay: {
@@ -64,9 +76,10 @@ const ReserveStatusCard = ({
         url: "http://localhost:5000/host/password",
         data: data,
       }).then((res) => {
-        if (res.data.status) {
+        if (res.data.success) {
           Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
             setModalIsOpen(false);
+            setDisabledState(true);
           });
         } else {
           if (res.data.alert_message) {
@@ -94,6 +107,7 @@ const ReserveStatusCard = ({
           총 금액 : {totalPrice} KLAY
         </Text>
         <Button
+          disabled={disabledState}
           colorScheme="purple"
           size="md"
           display="block"
@@ -103,6 +117,13 @@ const ReserveStatusCard = ({
           비밀번호 등록
         </Button>
         <Modal isOpen={modalIsOpen} style={modalStyle}>
+          <CloseButton
+            size="lg"
+            position="fixed"
+            right="36vw"
+            top="17vw"
+            onClick={() => setModalIsOpen(false)}
+          />
           <Heading size="xl">비밀번호 등록</Heading>
           <Box m="1.5vw auto auto 2vh">
             <FormControl isRequired>

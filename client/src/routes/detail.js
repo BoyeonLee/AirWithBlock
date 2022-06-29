@@ -294,7 +294,7 @@ const Detail = ({ account }) => {
               selectsStart
               startDate={checkIn}
               endDate={checkOut}
-              minDate={getMinDate}
+              minDate={checkIn}
               dateFormat="yyyy-MM-dd"
               excludeDates={checkInArray.map((date) => new Date(date))}
             />
@@ -313,7 +313,7 @@ const Detail = ({ account }) => {
               selectsEnd
               startDate={checkIn}
               endDate={checkOut}
-              minDate={checkIn}
+              minDate={checkOut}
               dateFormat="yyyy-MM-dd"
               excludeDates={checkOutArray.map((date) => new Date(date))}
             />

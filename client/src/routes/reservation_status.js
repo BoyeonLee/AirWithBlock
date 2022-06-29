@@ -39,6 +39,7 @@ const ReservationStatus = ({ account }) => {
                 checkin={v.checkin}
                 checkout={v.checkout}
                 totalPrice={v.totalPrice}
+                disabled={v.disabled}
               />
             );
           })}
