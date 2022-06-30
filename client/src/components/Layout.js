@@ -1,7 +1,11 @@
 import { Stack, Flex, Box, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-function Layout({ children }) {
+function Layout({ account, children }) {
+  const str1 = account.substring(0, 5);
+  const str2 = account.slice(-3);
+  const account_str = str1 + "..." + str2;
+
   return (
     <Stack h="100vh" id="main">
       <Flex bg="pink.50" pr="30vh" pl="30vh" justify="space-between" alignItems="center" h="15vh">
@@ -16,6 +20,9 @@ function Layout({ children }) {
           </Text>
         </Box>
         <Flex>
+          <Text fontWeight="bold" fontSize="3xl" mr="3vw" color="#495057">
+            account : ${account_str}
+          </Text>
           <Link to="/host">
             <Text fontWeight="bold" fontSize="3xl" mr="3vw" color="#495057">
               호스트 되기
