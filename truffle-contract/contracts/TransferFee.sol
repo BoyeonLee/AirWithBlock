@@ -22,7 +22,7 @@ contract TransferFee{
 
     /// @dev : 예약자가 contract로 송금하는 함수
     function transferToContract(address owner, uint product_id, uint date) public payable {
-        require(msg.sender.balance >= msg.value, "There is not enough klay in the account");
+        if (msg.value > msg.sender.balance) {revert();}
         require(msg.value > 0, "You cannot send 0 klay");
 
         uint reservationId = id;
@@ -35,8 +35,9 @@ contract TransferFee{
     }
 
     /// @dev : contract에서 집주인에게 송금하는 함수
-    function transferToOwner(uint reservationId) public payable {
+    function transferToOwner(uint reservationId, address buyer_address) public payable {
         require(ReservationMapping[reservationId].price <= address(this).balance, "There is no money to transfer to the contract.");
+        require(ReservationMapping[reservationId].buyer == buyer_address, "It's not a buyer");
 
         uint fee = ReservationMapping[reservationId].price;
         address owner = ReservationMapping[reservationId].owner;
@@ -51,5 +52,9 @@ contract TransferFee{
 
     function getBalanceOfContract() public view returns (uint) {
         return address(this).balance;
+    }
+
+    function getBalanceOfAddress(address _addr) public view returns (uint) {
+        return _addr.balance;
     }
 }
