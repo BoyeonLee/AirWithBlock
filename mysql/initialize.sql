@@ -31,7 +31,8 @@ CREATE TABLE `Reservation` (
   `buyer_account` varbinary(255) NOT NULL,
   `checkin` date NOT NULL,
   `checkout` date NOT NULL,
-  `reservation_day` int NOT NULL
+  `reservation_day` int NOT NULL,
+  `password_check` bool DEFAULT false
 );
 
 CREATE TABLE `Users` (
