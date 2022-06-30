@@ -41,14 +41,20 @@ router.get("/", async (req, res) => {
         return;
       } else {
         for (let i = 0; i < res_rows.length; i++) {
+          const reservation_id = res_rows[i].id;
           const product_id = res_rows[i].product_id;
+          const reservationMapping_id = res_rows[i].reservationMapping_id;
           const checkin = getDate(new Date(res_rows[i].checkin));
           const checkout = getDate(new Date(res_rows[i].checkout));
+          const password_check = res_rows[i].password_check;
 
           const temp = {
+            reservation_id: reservation_id,
             product_id: product_id,
+            reservationMapping_id: reservationMapping_id,
             checkin: checkin,
             checkout: checkout,
+            password_check: password_check,
           };
           tempArray.push(temp);
         }
@@ -62,11 +68,14 @@ router.get("/", async (req, res) => {
             const imgFile = `data:image/jpeg;base64,${b64}`;
 
             const result = {
-              id: product_id,
+              reservation_id: tempArray[j].reservation_id,
+              product_id: product_id,
+              reservationMapping_id: tempArray[j].reservationMapping_id,
               image: imgFile,
               name: rows[0].product_name,
               checkin: tempArray[j].checkin,
               checkout: tempArray[j].checkout,
+              password_check: tempArray[j].password_check,
             };
             reservationArray.push(result);
             if (j === tempArray.length - 1) {

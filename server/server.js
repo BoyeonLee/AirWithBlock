@@ -6,6 +6,8 @@ const mainRouter = require("./Router/main");
 const detailRouter = require("./Router/detail");
 const reserveRouter = require("./Router/reserve");
 const myReservationRouter = require("./Router/my_reservation");
+const getPasswordRouter = require("./Router/get_password");
+const updatePasswordcheckRouter = require("./Router/update_passwordcheck");
 
 const app = express();
 
@@ -23,6 +25,8 @@ app.use("/host", hostRouter);
 app.use("/detail", detailRouter);
 app.use("/reserve", reserveRouter);
 app.use("/my-reservation", myReservationRouter);
+app.use("/get_password", getPasswordRouter);
+app.use("/update_passwordcheck", updatePasswordcheckRouter);
 
 const port = 5000;
 app.listen(port, () => {

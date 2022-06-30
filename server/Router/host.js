@@ -190,7 +190,7 @@ router.post("/password", async (req, res) => {
     const product_id = req.body.product_id;
     const reservation_id = req.body.reservation_id;
     const owner_account = req.body.owner_account;
-    const password = req.body.owner_account;
+    const password = req.body.password;
 
     const check_sql = `SELECT * FROM Password WHERE product_id=${product_id} AND reservation_id=${reservation_id}`;
     con.query(check_sql, (err, rows, fields) => {
