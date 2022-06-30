@@ -53,13 +53,16 @@ export const contractABI = [
     signature: "0x95f847fd",
   },
   {
-    inputs: [{ internalType: "uint256", name: "reservationId", type: "uint256" }],
+    inputs: [
+      { internalType: "uint256", name: "reservationId", type: "uint256" },
+      { internalType: "address", name: "buyer_address", type: "address" },
+    ],
     name: "transferToOwner",
     outputs: [],
     stateMutability: "payable",
     type: "function",
     payable: true,
-    signature: "0x87c1ed12",
+    signature: "0x39ee48f6",
   },
   {
     inputs: [],
@@ -70,6 +73,15 @@ export const contractABI = [
     constant: true,
     signature: "0x22968885",
   },
+  {
+    inputs: [{ internalType: "address", name: "_addr", type: "address" }],
+    name: "getBalanceOfAddress",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
+    signature: "0xa665c4a4",
+  },
 ];
 
-export const contractAddress = "0x9b18117B2516Cf0C49501f52A355E792eE3A7cC4";
+export const contractAddress = "0xd43671a8699001586DD28f5549A7B2300CC20747";
