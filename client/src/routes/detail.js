@@ -81,15 +81,6 @@ const Detail = ({ account }) => {
     });
   };
 
-  const getMinDate = () => {
-    let today = new Date();
-    while (!checkInArray.includes(getDate(today))) {
-      const next = new Date(today.setDate(today.getDate() + 1));
-      today = next;
-    }
-    return today;
-  };
-
   const getDate = (date) => {
     const year = date.getFullYear();
     const month = ("0" + (date.getMonth() + 1)).slice(-2);

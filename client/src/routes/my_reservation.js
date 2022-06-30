@@ -30,11 +30,15 @@ const MyReservation = ({ account }) => {
             return (
               <ReservationCard
                 key={i}
-                id={v.id}
+                account={account}
+                reservation_id={v.reservation_id}
+                product_id={v.product_id}
+                reservationMapping_id={v.reservationMapping_id}
                 image={v.image}
                 name={v.name}
                 checkin={v.checkin}
                 checkout={v.checkout}
+                password_check={v.password_check}
               />
             );
           })}
