@@ -13,13 +13,21 @@ const MyHouseCard = ({ account, product_id, image, name, basic_addr, detailed_ad
         <Text fontSize="2xl" mb="0.5vw">
           {name}
         </Text>
-        <Text fontSize="md">
+        <Text fontSize="md" w="14vw" m="0 auto">
           {basic_addr}
           <br />
           {detailed_addr}
         </Text>
-        <Flex justify="center" mt="1vw">
-          <Button colorScheme="purple" size="md" display="block" mr="1vh">
+        <Flex justify="center" mt="1vh">
+          <Button
+            colorScheme="purple"
+            size="md"
+            display="block"
+            mr="1vh"
+            onClick={() => {
+              window.location.href = `/modify/${product_id}`;
+            }}
+          >
             수정하기
           </Button>
           <Button colorScheme="blue" size="md" display="block">

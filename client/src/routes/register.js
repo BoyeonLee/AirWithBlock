@@ -50,7 +50,6 @@ const Register = ({ account }) => {
 
     try {
       const compressedFile = await imageCompression(image, options);
-      console.log(compressedFile);
       setImageFile(compressedFile);
     } catch (error) {
       console.log(error);
@@ -121,7 +120,6 @@ const Register = ({ account }) => {
                 onChange={(e) => {
                   onChangeImage(e.target.files[0]);
                   onResizeImage(e.target.files[0]);
-                  console.log(e.target.files[0]);
                 }}
                 style={{ display: "none" }}
               ></Input>
@@ -136,7 +134,7 @@ const Register = ({ account }) => {
                 <Input
                   size="md"
                   type="text"
-                  value={name}
+                  defaultValue={name}
                   onChange={(e) => {
                     setName(e.target.value);
                   }}
@@ -149,7 +147,7 @@ const Register = ({ account }) => {
                   집 소개
                 </FormLabel>
                 <Textarea
-                  value={contents}
+                  defaultValue={contents}
                   onChange={(e) => {
                     setContents(e.target.value);
                   }}
@@ -184,7 +182,7 @@ const Register = ({ account }) => {
                   isRequired
                   size="md"
                   type="number"
-                  value={person}
+                  defaultValue={person}
                   onChange={(e) => {
                     setPerson(e.target.value);
                   }}
@@ -210,7 +208,7 @@ const Register = ({ account }) => {
               <Input
                 isRequired
                 type="number"
-                value={price}
+                defaultValue={price}
                 onChange={(e) => {
                   setPrice(e.target.value);
                 }}

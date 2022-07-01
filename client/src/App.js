@@ -8,6 +8,7 @@ import Detail from "./routes/detail";
 import MyReservation from "./routes/my_reservation";
 import ReservationStatus from "./routes/reservation_status";
 import MyHouse from "./routes/my_house";
+import Modify from "./routes/modify";
 import Swal from "sweetalert2";
 import axios from "axios";
 
@@ -60,6 +61,7 @@ function App() {
           <Route path="/host/register" element={<Register account={account} />} />
           <Route path="/detail/:product_id" element={<Detail account={account} />} />
           <Route path="/my-reservation" element={<MyReservation account={account} />} />
+          <Route path="/modify/:product_id" element={<Modify account={account} />} />
         </Routes>
       </Layout>
     </BrowserRouter>
