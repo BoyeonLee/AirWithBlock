@@ -61,7 +61,7 @@ function App() {
           <Route path="/host/register" element={<Register account={account} />} />
           <Route path="/detail/:product_id" element={<Detail account={account} />} />
           <Route path="/my-reservation" element={<MyReservation account={account} />} />
-          <Route path="/modify/:product_id" element={<Modify account={account} />} />
+          <Route path="/host/modify/:product_id" element={<Modify account={account} />} />
         </Routes>
       </Layout>
     </BrowserRouter>

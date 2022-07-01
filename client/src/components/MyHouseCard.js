@@ -25,7 +25,7 @@ const MyHouseCard = ({ account, product_id, image, name, basic_addr, detailed_ad
             display="block"
             mr="1vh"
             onClick={() => {
-              window.location.href = `/modify/${product_id}`;
+              window.location.href = `/host/modify/${product_id}`;
             }}
           >
             수정하기

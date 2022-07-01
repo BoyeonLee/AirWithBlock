@@ -12,7 +12,7 @@ const reservationStatusRouter = require("./router/host/reservation_status_api");
 const registerRouter = require("./router/host/register_api");
 const passwordRouter = require("./router/host/password_api");
 const myHouseRouter = require("./router/host/my_house_api");
-const modifyRouter = require("./router/modify_api");
+const modifyRouter = require("./router/host/modify_api");
 
 const app = express();
 
@@ -36,7 +36,7 @@ app.use("/host/register", registerRouter);
 app.use("/host/reservation-status", reservationStatusRouter);
 app.use("/host/password", passwordRouter);
 app.use("/host/my-house", myHouseRouter);
-app.use("/modify", modifyRouter);
+app.use("/host/modify", modifyRouter);
 
 const port = 5000;
 app.listen(port, () => {
