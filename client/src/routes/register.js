@@ -87,13 +87,13 @@ const Register = ({ account }) => {
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     }).then((res) => {
-      if (res.data.success) {
+      if (res.status === 200) {
         const id = res.data.product_id;
         Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
           window.location.href = `/detail/${id}`;
         });
       } else {
-        console.log(res.data);
+        console.error(res.data);
       }
     });
   };

@@ -7,6 +7,7 @@ import Main from "./routes/main";
 import Detail from "./routes/detail";
 import MyReservation from "./routes/my_reservation";
 import ReservationStatus from "./routes/reservation_status";
+import MyHouse from "./routes/my_house";
 import Swal from "sweetalert2";
 import axios from "axios";
 
@@ -29,10 +30,10 @@ function App() {
           url: "http://localhost:5000/get_keys",
           data: { account: account[0] },
         }).then((res) => {
-          if (res.data.success) {
+          if (res.status === 200) {
             return;
           } else {
-            console.log(res.data.message);
+            console.error(res.data);
           }
         });
       } catch (error) {
@@ -51,13 +52,14 @@ function App() {
         <Routes>
           <Route path="/" element={<Main account={account} />} />
           <Route path="/host" element={<Host />} />
-          <Route path="/host/register" element={<Register account={account} />} />
-          <Route path="/detail/:product_id" element={<Detail account={account} />} />
-          <Route path="/my-reservation" element={<MyReservation account={account} />} />
           <Route
             path="/host/reservation-status"
             element={<ReservationStatus account={account} />}
           />
+          <Route path="/host/my-house" element={<MyHouse account={account} />} />
+          <Route path="/host/register" element={<Register account={account} />} />
+          <Route path="/detail/:product_id" element={<Detail account={account} />} />
+          <Route path="/my-reservation" element={<MyReservation account={account} />} />
         </Routes>
       </Layout>
     </BrowserRouter>

@@ -58,20 +58,24 @@ const ReservationCard = ({
     };
 
     axios.get("http://localhost:5000/get_password", { params: { data: data } }).then((res) => {
-      if (res.data.success) {
-        if (password_check === 0) {
-          Swal.fire({ icon: "success", title: `비밀번호 : ${res.data.password}`, width: 600 }).then(
-            () => {
-              window.location.reload();
-            }
-          );
-        } else {
-          Swal.fire({ icon: "success", title: `비밀번호 : ${res.data.password}`, width: 600 });
-        }
-      } else {
+      if (res.status === 200) {
         if (res.data.alert_message) {
           Swal.fire({ icon: "error", title: res.data.alert_message, width: 800 });
+        } else {
+          if (password_check === 0) {
+            Swal.fire({
+              icon: "success",
+              title: `비밀번호 : ${res.data.password}`,
+              width: 600,
+            }).then(() => {
+              window.location.reload();
+            });
+          } else {
+            Swal.fire({ icon: "success", title: `비밀번호 : ${res.data.password}`, width: 600 });
+          }
         }
+      } else {
+        console.error(res.data);
       }
     });
   };
@@ -98,10 +102,10 @@ const ReservationCard = ({
               url: "http://localhost:5000/update_passwordcheck",
               data: { reservation_id: reservation_id, password_check: 1 },
             }).then((res) => {
-              if (res.data.success) {
+              if (res.status === 200) {
                 getPasswordFromServer();
               } else {
-                console.log(res.data);
+                console.error(res.data);
               }
             });
           }

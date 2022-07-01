@@ -5,7 +5,6 @@ const fs = require("fs");
 const mysql = require("mysql");
 const password = fs.readFileSync(".mysql_password", "utf-8");
 const { fail } = require("assert");
-const { reset } = require("nodemon");
 
 const con = mysql.createConnection({
   host: "localhost",
@@ -37,7 +36,7 @@ router.get("/", async (req, res) => {
     const res_sql = `SELECT * FROM Reservation WHERE buyer_account = '${account}'`;
     con.query(res_sql, async (res_err, res_rows, fields) => {
       if (res_err) {
-        res.send({ success: fail, message: res_err });
+        res.status(400).send({ message: res_err });
         return;
       } else {
         for (let i = 0; i < res_rows.length; i++) {
@@ -79,14 +78,14 @@ router.get("/", async (req, res) => {
             };
             reservationArray.push(result);
             if (j === tempArray.length - 1) {
-              res.send({ success: true, reservationArray: reservationArray });
+              res.status(200).send({ reservationArray: reservationArray });
             }
           });
         }
       }
     });
   } catch (err) {
-    res.send({ success: fail, message: err });
+    res.status(400).send({ message: err });
     return;
   }
 });

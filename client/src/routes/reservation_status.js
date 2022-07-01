@@ -10,10 +10,10 @@ const ReservationStatus = ({ account }) => {
     axios
       .get("http://localhost:5000/host/reservation-status", { params: { account: account } })
       .then((res) => {
-        if (res.data.success) {
+        if (res.status === 200) {
           setReserveStatusArray(res.data.reserveStatusArray);
         } else {
-          console.log(res.data);
+          console.error(res.data);
         }
       });
   };

@@ -76,15 +76,17 @@ const ReserveStatusCard = ({
         url: "http://localhost:5000/host/password",
         data: data,
       }).then((res) => {
-        if (res.data.success) {
-          Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
-            setModalIsOpen(false);
-            setDisabledState(true);
-          });
-        } else {
+        if (res.status === 200) {
           if (res.data.alert_message) {
             Swal.fire({ icon: "error", title: res.data.alert_message, width: 600 });
+          } else {
+            Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
+              setModalIsOpen(false);
+              setDisabledState(true);
+            });
           }
+        } else {
+          console.error(res.data);
         }
       });
     }

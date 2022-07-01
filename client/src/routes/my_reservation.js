@@ -9,10 +9,10 @@ const MyReservation = ({ account }) => {
     axios
       .get("http://localhost:5000/my-reservation", { params: { account: account } })
       .then((res) => {
-        if (res.data.success) {
+        if (res.status === 200) {
           setReservationArray(res.data.reservationArray);
         } else {
-          console.log(res.data);
+          console.error(res.data);
         }
       });
   };

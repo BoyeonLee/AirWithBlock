@@ -11,10 +11,10 @@ const Main = ({ account }) => {
       method: "GET",
       url: "http://localhost:5000/",
     }).then((res) => {
-      if (res.data.success) {
+      if (res.status === 200) {
         setProductArray(res.data.infoArray);
       } else {
-        console.log(res.data);
+        console.error(res.data);
       }
     });
   };

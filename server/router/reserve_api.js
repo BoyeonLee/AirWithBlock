@@ -1,21 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const fs = require("fs");
-
-const mysql = require("mysql");
-const password = fs.readFileSync(".mysql_password", "utf-8");
-const { fail } = require("assert");
-
-const con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: password,
-  database: "airwithblock_db",
-});
-
-con.connect(function (err) {
-  if (err) throw err;
-});
+const con = require("./../modules/mysql");
 
 router.post("/", async (req, res) => {
   try {
@@ -33,13 +18,13 @@ router.post("/", async (req, res) => {
 
     con.query(sql, params, (err, rows, fields) => {
       if (err) {
-        res.send({ success: fail, message: err });
+        res.status(400).send({ message: err });
       } else {
-        res.send({ success: true, message: "예약 완료" });
+        res.status(200).send({ message: "예약 완료" });
       }
     });
   } catch (err) {
-    res.send({ success: fail, message: err });
+    res.status(400).send({ message: err });
   }
 });
 

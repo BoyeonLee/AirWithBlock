@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
+const getDate = require("../modules/getDate");
 
 const mysql = require("mysql");
 const password = fs.readFileSync(".mysql_password", "utf-8");
@@ -18,15 +19,6 @@ con.connect(function (err) {
   if (err) throw err;
 });
 
-const getDate = (date) => {
-  const year = date.getFullYear();
-  const month = ("0" + (date.getMonth() + 1)).slice(-2);
-  const day = ("0" + date.getDate()).slice(-2);
-
-  const dateString = year + "-" + month + "-" + day;
-  return dateString;
-};
-
 router.get("/:product_id", async (req, res) => {
   try {
     const id = req.params.product_id;
@@ -35,7 +27,7 @@ router.get("/:product_id", async (req, res) => {
 
     con.query(sql1 + sql2, (err, rows, fields) => {
       if (err) {
-        res.send({ success: fail, message: err });
+        res.status(400).send({ message: err });
       } else {
         const infoArray = [];
         const checkInArray = [];
@@ -64,16 +56,15 @@ router.get("/:product_id", async (req, res) => {
           checkOutArray.push(getDate(rows[1][i].checkout));
         }
 
-        res.send({
-          success: true,
+        res.status(200).send({
           infoArray: infoArray,
           checkInArray: checkInArray,
           checkOutArray: checkOutArray,
         });
       }
     });
-  } catch (e) {
-    res.send({ success: fail, message: err });
+  } catch (err) {
+    res.status(400).send({ message: err });
   }
 });
 

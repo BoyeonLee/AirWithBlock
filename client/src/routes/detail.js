@@ -38,7 +38,7 @@ const Detail = ({ account }) => {
       method: "GET",
       url: `http://localhost:5000/detail/${product_id}`,
     }).then((res) => {
-      if (res.data.success) {
+      if (res.status === 200) {
         setImage(res.data.infoArray[0].image);
         setOwnerAccount(res.data.infoArray[0].info.owner_account);
         setName(res.data.infoArray[0].info.product_name);
@@ -76,7 +76,7 @@ const Detail = ({ account }) => {
           setCheckOut(new Date(getDate(tomorrow)));
         }
       } else {
-        console.log(res.data);
+        console.error(res.data);
       }
     });
   };
@@ -146,12 +146,12 @@ const Detail = ({ account }) => {
             url: "http://localhost:5000/reserve",
             data: data,
           }).then((res) => {
-            if (res.data.success) {
+            if (res.status === 200) {
               Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
                 window.location.href = "/my-reservation";
               });
             } else {
-              console.log(res.data);
+              console.error(res.data);
             }
           });
         }
