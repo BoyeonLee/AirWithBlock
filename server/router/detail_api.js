@@ -2,22 +2,7 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const getDate = require("../modules/getDate");
-
-const mysql = require("mysql");
-const password = fs.readFileSync(".mysql_password", "utf-8");
-const { fail } = require("assert");
-
-const con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: password,
-  database: "airwithblock_db",
-  multipleStatements: true,
-});
-
-con.connect(function (err) {
-  if (err) throw err;
-});
+const con = require("../modules/mysql");
 
 router.get("/:product_id", async (req, res) => {
   try {

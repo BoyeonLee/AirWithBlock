@@ -1,7 +1,26 @@
 import { Box, Flex, Text, Button } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const MyHouseCard = ({ account, product_id, image, name, basic_addr, detailed_addr }) => {
+  const deleteProduct = () => {
+    axios
+      .delete(`http://localhost:5000/host/delete/${product_id}`, { data: { account: account } })
+      .then((res) => {
+        if (res.status === 200) {
+          if (res.data.message) {
+            Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
+              window.location.reload();
+            });
+          } else {
+            Swal.fire({ icon: "error", title: res.data.unable_message, width: 600 });
+          }
+        } else {
+          console.error(res.data);
+        }
+      });
+  };
   return (
     <Box w="17vw" h="40vh" bg="pink.50">
       <Link to={`/detail/${product_id}`}>
@@ -30,7 +49,7 @@ const MyHouseCard = ({ account, product_id, image, name, basic_addr, detailed_ad
           >
             수정하기
           </Button>
-          <Button colorScheme="blue" size="md" display="block">
+          <Button colorScheme="blue" size="md" display="block" onClick={deleteProduct}>
             삭제하기
           </Button>
         </Flex>

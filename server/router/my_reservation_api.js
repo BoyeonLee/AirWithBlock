@@ -1,22 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
-
-const mysql = require("mysql");
-const password = fs.readFileSync(".mysql_password", "utf-8");
-const { fail } = require("assert");
-
-const con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: password,
-  database: "airwithblock_db",
-  multipleStatements: true,
-});
-
-con.connect(function (err) {
-  if (err) throw err;
-});
+const con = require("../modules/mysql");
 
 const getDate = (date) => {
   const year = date.getFullYear();

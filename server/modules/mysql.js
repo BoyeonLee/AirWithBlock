@@ -8,6 +8,7 @@ const con = mysql.createConnection({
   user: "root",
   password: password,
   database: "airwithblock_db",
+  multipleStatements: true,
 });
 
 con.connect(function (err) {
