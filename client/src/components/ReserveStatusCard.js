@@ -77,14 +77,10 @@ const ReserveStatusCard = ({
         data: data,
       }).then((res) => {
         if (res.status === 200) {
-          if (res.data.alert_message) {
-            Swal.fire({ icon: "error", title: res.data.alert_message, width: 600 });
-          } else {
-            Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
-              setModalIsOpen(false);
-              setDisabledState(true);
-            });
-          }
+          Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
+            setModalIsOpen(false);
+            setDisabledState(true);
+          });
         } else {
           console.error(res.data);
         }

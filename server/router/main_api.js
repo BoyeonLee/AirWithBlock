@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
     const sql = "SELECT * FROM Products";
     con.query(sql, (err, rows, fields) => {
       if (err) {
-        res.status(400).send({ message: err });
+        res.status(500).send({ message: err });
       } else {
         const infoArray = [];
         for (var i = 0; i < rows.length; i++) {

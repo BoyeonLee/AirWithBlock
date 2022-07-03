@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
     const sql = `SELECT * FROM Products WHERE owner_account = '${account}'`;
     con.query(sql, async (err, rows, fields) => {
       if (err) {
-        res.status(400).send({ message: err });
+        res.status(500).send({ message: err });
       } else {
         for (let i = 0; i < rows.length; i++) {
           const product_id = rows[i].id;

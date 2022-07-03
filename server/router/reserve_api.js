@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
 
     con.query(sql, params, (err, rows, fields) => {
       if (err) {
-        res.status(400).send({ message: err });
+        res.status(500).send({ message: err });
       } else {
         res.status(200).send({ message: "예약 완료" });
       }

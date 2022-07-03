@@ -12,7 +12,7 @@ router.get("/:product_id", async (req, res) => {
 
     con.query(sql1 + sql2, (err, rows, fields) => {
       if (err) {
-        res.status(400).send({ message: err });
+        res.status(500).send({ message: err });
       } else {
         const infoArray = [];
         const checkInArray = [];

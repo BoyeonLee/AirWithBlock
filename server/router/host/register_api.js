@@ -58,7 +58,7 @@ router.post("/", upload.single("file"), async (req, res, next) => {
 
     con.query(sql, params, (err, rows, fields) => {
       if (err) {
-        res.status(400).send({ message: err });
+        res.status(500).send({ message: err });
       } else {
         res.status(200).send({ message: "집 등록완료", product_id: rows.insertId });
         console.log("success");

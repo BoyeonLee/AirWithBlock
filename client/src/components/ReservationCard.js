@@ -59,20 +59,16 @@ const ReservationCard = ({
 
     axios.get("http://localhost:5000/get_password", { params: { data: data } }).then((res) => {
       if (res.status === 200) {
-        if (res.data.alert_message) {
-          Swal.fire({ icon: "error", title: res.data.alert_message, width: 800 });
+        if (password_check === 0) {
+          Swal.fire({
+            icon: "success",
+            title: `비밀번호 : ${res.data.password}`,
+            width: 600,
+          }).then(() => {
+            window.location.reload();
+          });
         } else {
-          if (password_check === 0) {
-            Swal.fire({
-              icon: "success",
-              title: `비밀번호 : ${res.data.password}`,
-              width: 600,
-            }).then(() => {
-              window.location.reload();
-            });
-          } else {
-            Swal.fire({ icon: "success", title: `비밀번호 : ${res.data.password}`, width: 600 });
-          }
+          Swal.fire({ icon: "success", title: `비밀번호 : ${res.data.password}`, width: 600 });
         }
       } else {
         console.error(res.data);
@@ -80,42 +76,70 @@ const ReservationCard = ({
     });
   };
 
+  const checkPassword = () => {
+    axios
+      .get("http://localhost:5000/check_password", {
+        params: { reservation_id: reservation_id, product_id: product_id },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(res.data);
+        } else {
+          console.error(res.data);
+        }
+      });
+  };
+
   const getPassword = async () => {
     const caver = new Caver(window.klaytn);
     const contract = caver.contract.create(contractABI, contractAddress);
 
-    if (password_check === 0) {
-      caver.klay
-        .sendTransaction({
-          type: "SMART_CONTRACT_EXECUTION",
-          from: window.klaytn.selectedAddress,
-          to: contractAddress,
-          data: contract.methods
-            .transferToOwner(reservationMapping_id, window.klaytn.selectedAddress)
-            .encodeABI(),
-          gas: 8000000,
-        })
-        .on("receipt", async (receipt) => {
-          if (receipt.status) {
-            await axios({
-              method: "PUT",
-              url: "http://localhost:5000/update_passwordcheck",
-              data: { reservation_id: reservation_id, password_check: 1 },
-            }).then((res) => {
-              if (res.status === 200) {
-                getPasswordFromServer();
-              } else {
-                console.error(res.data);
-              }
-            });
+    axios
+      .get("http://localhost:5000/check_password", {
+        params: { reservation_id: reservation_id, product_id: product_id },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          if (res.data.message) {
+            Swal.fire({ icon: "error", title: res.data.message, width: 600 });
+            return;
           }
-        })
-        .on("error", (e) => {
-          console.log(e);
-        });
-    } else {
-      getPasswordFromServer();
-    }
+          if (password_check === 0) {
+            caver.klay
+              .sendTransaction({
+                type: "SMART_CONTRACT_EXECUTION",
+                from: window.klaytn.selectedAddress,
+                to: contractAddress,
+                data: contract.methods
+                  .transferToOwner(reservationMapping_id, window.klaytn.selectedAddress)
+                  .encodeABI(),
+                gas: 8000000,
+              })
+              .on("receipt", async (receipt) => {
+                if (receipt.status) {
+                  await axios({
+                    method: "PUT",
+                    url: "http://localhost:5000/update_passwordcheck",
+                    data: { reservation_id: reservation_id, password_check: 1 },
+                  }).then((res) => {
+                    if (res.status === 200) {
+                      getPasswordFromServer();
+                    } else {
+                      console.error(res.data);
+                    }
+                  });
+                }
+              })
+              .on("error", (e) => {
+                console.log(e);
+              });
+          } else {
+            getPasswordFromServer();
+          }
+        } else {
+          console.error(res.data);
+        }
+      });
   };
 
   useEffect(() => {

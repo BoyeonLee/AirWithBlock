@@ -13,10 +13,10 @@ router.get("/:product_id", async (req, res) => {
     const sql = `SELECT * FROM Products WHERE id = ${product_id}`;
     con.query(sql, (err, rows, fields) => {
       if (err) {
-        res.status(400).send({ message: err });
+        res.status(500).send({ message: err });
       } else {
         if (rows[0].owner_account.toString() !== account) {
-          res.status(400).status({ message: "owner_account가 일치하지 않습니다." });
+          res.status(403).status({ message: "owner_account가 일치하지 않습니다." });
         } else {
           const data = fs.readFileSync(rows[0].product_image);
           const b64 = data.toString("base64");
@@ -62,7 +62,7 @@ router.put("/:product_id", upload.single("file"), async (req, res) => {
       ];
       con.query(sql, params, (err, rows, fields) => {
         if (err) {
-          res.status(400).send({ message: err });
+          res.status(500).send({ message: err });
         } else {
           res.status(200).send({ message: "수정 완료!", product_id: product_id });
         }
@@ -84,7 +84,7 @@ router.put("/:product_id", upload.single("file"), async (req, res) => {
       ];
       con.query(sql, params, (err, rows, fields) => {
         if (err) {
-          res.status(400).send({ message: err });
+          res.status(500).send({ message: err });
         } else {
           res.status(200).send({ message: "수정 완료!", product_id: product_id });
         }

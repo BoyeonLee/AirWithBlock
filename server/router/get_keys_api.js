@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
     const sql = `SELECT * FROM Users WHERE account = '${account}'`;
     con.query(sql, async (err, rows, fields) => {
       if (err) {
-        res.status(400).send({ message: err });
+        res.status(500).send({ message: err });
         return;
       } else {
         if (rows.length !== 0) {
@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
               const params = [account.toString(), publicKey, privateKey];
               con.query(sql, params, async (err, rows, fields) => {
                 if (err) {
-                  res.status(400).send({ message: err });
+                  res.status(500).send({ message: err });
                 } else {
                   res.status(200).send({ message: "keys 저장 완료" });
                   console.log("keys 저장 완료");
