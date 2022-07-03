@@ -15,6 +15,7 @@ const myHouseRouter = require("./router/host/my_house_api");
 const modifyRouter = require("./router/host/modify_api");
 const deleteRouter = require("./router/host/delete_api");
 const checkPasswordRouter = require("./router/check_password_api");
+const changePasswordRouter = require("./router/change_password_api");
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use("/my-reservation", myReservationRouter);
 app.use("/get_password", getPasswordRouter);
 app.use("/update_passwordcheck", updatePasswordcheckRouter);
 app.use("/check_password", checkPasswordRouter);
+app.use("/change_password", changePasswordRouter);
 
 app.use("/host/register", registerRouter);
 app.use("/host/reservation-status", reservationStatusRouter);
