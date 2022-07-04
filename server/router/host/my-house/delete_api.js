@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const con = require("../../modules/mysql");
-const getDate = require("../../modules/getDate");
+const con = require("../../../modules/mysql");
+const getDate = require("../../../modules/getDate");
 
 router.delete("/:product_id", async (req, res) => {
   try {

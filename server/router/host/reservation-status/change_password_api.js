@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const crypto = require("crypto");
-const con = require("../modules/mysql");
+const con = require("../../../modules/mysql");
 
 router.put("/", async (req, res) => {
   const reservation_id = req.body.reservation_id;

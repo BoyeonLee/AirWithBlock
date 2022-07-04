@@ -64,7 +64,9 @@ const Modify = ({ account }) => {
 
   const getProductInfo = () => {
     axios
-      .get(`http://localhost:5000/host/modify/${product_id}`, { params: { account: account } })
+      .get(`http://localhost:5000/host/my-house/modify/${product_id}`, {
+        params: { account: account },
+      })
       .then((res) => {
         if (res.status === 200) {
           setImageUrl(res.data.image);
@@ -101,7 +103,7 @@ const Modify = ({ account }) => {
 
     await axios({
       method: "PUT",
-      url: `http://localhost:5000/host/modify/${product_id}`,
+      url: `http://localhost:5000/host/my-house/modify/${product_id}`,
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     }).then((res) => {

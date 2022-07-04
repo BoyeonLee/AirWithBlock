@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
-const getDate = require("../modules/getDate");
-const con = require("../modules/mysql");
+const getDate = require("../../modules/getDate");
+const con = require("../../modules/mysql");
 
 router.get("/:product_id", async (req, res) => {
   try {

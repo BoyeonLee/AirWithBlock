@@ -77,7 +77,7 @@ const ReserveStatusCard = ({
 
       await axios({
         method: "POST",
-        url: "http://localhost:5000/host/password",
+        url: "http://localhost:5000/host/reservation-status/password",
         data: data,
       }).then((res) => {
         if (res.status === 200) {
@@ -110,7 +110,7 @@ const ReserveStatusCard = ({
 
       await axios({
         method: "PUT",
-        url: "http://localhost:5000/change_password",
+        url: "http://localhost:5000/host/reservation-status/change_password",
         data: data,
       }).then((res) => {
         if (res.status === 200) {

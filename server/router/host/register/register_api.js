@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const fs = require("fs");
-const con = require("./../../modules/mysql");
+const con = require("../../../modules/mysql");
 
 try {
   fs.readdirSync("mainImage");

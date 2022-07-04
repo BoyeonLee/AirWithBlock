@@ -6,7 +6,9 @@ import Swal from "sweetalert2";
 const MyHouseCard = ({ account, product_id, image, name, basic_addr, detailed_addr }) => {
   const deleteProduct = () => {
     axios
-      .delete(`http://localhost:5000/host/delete/${product_id}`, { data: { account: account } })
+      .delete(`http://localhost:5000/host/my-house/delete/${product_id}`, {
+        data: { account: account },
+      })
       .then((res) => {
         if (res.status === 200) {
           if (res.data.message) {

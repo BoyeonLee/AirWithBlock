@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const con = require("../modules/mysql");
+const con = require("../../modules/mysql");
 
 router.get("/", async (req, res) => {
   const reservation_id = parseInt(req.query.reservation_id);

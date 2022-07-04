@@ -62,28 +62,30 @@ const ReservationCard = ({
       reservation_id: reservation_id,
     };
 
-    axios.get("http://localhost:5000/get_password", { params: { data: data } }).then((res) => {
-      if (res.status === 200) {
-        if (password_check === 0) {
-          Swal.fire({
-            icon: "success",
-            title: `비밀번호 : ${res.data.password}`,
-            width: 600,
-          }).then(() => {
-            window.location.reload();
-          });
+    axios
+      .get("http://localhost:5000/my-reservation/get_password", { params: { data: data } })
+      .then((res) => {
+        if (res.status === 200) {
+          if (password_check === 0) {
+            Swal.fire({
+              icon: "success",
+              title: `비밀번호 : ${res.data.password}`,
+              width: 600,
+            }).then(() => {
+              window.location.reload();
+            });
+          } else {
+            Swal.fire({ icon: "success", title: `비밀번호 : ${res.data.password}`, width: 600 });
+          }
         } else {
-          Swal.fire({ icon: "success", title: `비밀번호 : ${res.data.password}`, width: 600 });
+          console.error(res.data);
         }
-      } else {
-        console.error(res.data);
-      }
-    });
+      });
   };
 
   const getPassword = async () => {
     axios
-      .get("http://localhost:5000/check_password", {
+      .get("http://localhost:5000/my-reservation/check_password", {
         params: { reservation_id: reservation_id, product_id: product_id },
       })
       .then((res) => {
@@ -107,7 +109,7 @@ const ReservationCard = ({
                 if (receipt.status) {
                   await axios({
                     method: "PUT",
-                    url: "http://localhost:5000/update_passwordcheck",
+                    url: "http://localhost:5000/my-reservation/update_passwordcheck",
                     data: { reservation_id: reservation_id, password_check: 1 },
                   }).then((res) => {
                     if (res.status === 200) {

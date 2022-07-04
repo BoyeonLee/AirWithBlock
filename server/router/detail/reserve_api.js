@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const con = require("./../modules/mysql");
+const con = require("../../modules/mysql");
 
 router.post("/", async (req, res) => {
   try {

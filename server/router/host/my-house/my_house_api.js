@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
-const con = require("./../../modules/mysql");
+const con = require("../../../modules/mysql");
 
 router.get("/", async (req, res) => {
   try {
