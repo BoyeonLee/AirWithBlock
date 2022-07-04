@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
 
     const reserveStatusArray = [];
 
-    const join_sql = `SELECT r.id, r.product_id, p.product_image, p.product_name, r.checkin, r.checkout, p.price, r.reservation_day FROM Reservation AS r INNER JOIN Products AS p ON r.product_id = p.id WHERE p.owner_account = '${account}'`;
+    const join_sql = `SELECT r.id, r.product_id, r.reservationMapping_id, p.product_image, p.product_name, r.checkin, r.checkout, p.price, r.reservation_day FROM Reservation AS r INNER JOIN Products AS p ON r.product_id = p.id WHERE p.owner_account = '${account}'`;
     con.query(join_sql, (join_err, join_rows, fields) => {
       if (join_err) {
         res.status(500).send({ message: join_err });
@@ -46,6 +46,7 @@ router.get("/", async (req, res) => {
               const result = {
                 reservation_id: join_rows[i].id,
                 product_id: join_rows[i].product_id,
+                reservationMapping_id: join_rows[i].reservationMapping_id,
                 image: imgFile,
                 name: join_rows[i].product_name,
                 checkin: getDate(join_rows[i].checkin),

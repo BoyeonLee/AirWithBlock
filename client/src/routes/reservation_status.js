@@ -34,6 +34,7 @@ const ReservationStatus = ({ account }) => {
                 owner_account={account}
                 reservation_id={v.reservation_id}
                 product_id={v.product_id}
+                reservationMapping_id={v.reservationMapping_id}
                 image={v.image}
                 name={v.name}
                 checkin={v.checkin}

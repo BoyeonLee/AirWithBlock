@@ -17,6 +17,7 @@ const registerRouter = require("./router/host/register/register_api");
 const passwordRouter = require("./router/host/reservation-status/password_api");
 const reservationStatusRouter = require("./router/host/reservation-status/reservation_status_api");
 const changePasswordRouter = require("./router/host/reservation-status/change_password_api");
+const calculateRouter = require("./router/host/reservation-status/calculate_api");
 
 const myReservationRouter = require("./router/my-reservation/my_reservation_api");
 const cancelReservationRouter = require("./router/my-reservation/cancel_reservation_api");
@@ -50,6 +51,7 @@ app.use("/host/register", registerRouter);
 app.use("/host/reservation-status", reservationStatusRouter);
 app.use("/host/reservation-status/password", passwordRouter);
 app.use("/host/reservation-status/change_password", changePasswordRouter);
+app.use("/host/reservation-status/calculate", calculateRouter);
 
 app.use("/my-reservation", myReservationRouter);
 app.use("/my-reservation/cancel", cancelReservationRouter);

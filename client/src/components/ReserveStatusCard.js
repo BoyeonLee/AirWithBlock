@@ -16,10 +16,14 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+import Caver from "caver-js";
+import { contractABI, contractAddress } from "./../contract/transferContract";
+
 const ReserveStatusCard = ({
   owner_account,
   reservation_id,
   product_id,
+  reservationMapping_id,
   image,
   name,
   checkin,
@@ -34,6 +38,11 @@ const ReserveStatusCard = ({
   const [changeDisabled, setChangeDisabled] = useState(false);
   const [heading, setHeading] = useState("");
   const [changeLabel, setChangeLabel] = useState("");
+  const [isCalculated, setIsCalculated] = useState(false);
+  const [calculateDisabled, setCalculateDisabled] = useState(false);
+
+  const caver = new Caver(window.klaytn);
+  const contract = caver.contract.create(contractABI, contractAddress);
 
   const modalStyle = {
     overlay: {
@@ -58,6 +67,64 @@ const ReserveStatusCard = ({
       zIndex: 10,
       paddingTop: "5vh",
     },
+  };
+
+  const getDate = (date) => {
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+
+    const dateString = year + "/" + month + "/" + day;
+    return dateString;
+  };
+
+  const checkCalculate = () => {
+    if (new Date(getDate(new Date())) > new Date(checkin)) {
+      axios
+        .get("http://localhost:5000/host/reservation-status/calculate", {
+          params: { reservation_id: reservation_id },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            setIsCalculated(res.data.calculate);
+          } else {
+            console.error(res.data);
+          }
+        });
+    }
+  };
+
+  const transferToMe = () => {
+    caver.klay
+      .sendTransaction({
+        type: "SMART_CONTRACT_EXECUTION",
+        from: window.klaytn.selectedAddress,
+        to: contractAddress,
+        data: contract.methods
+          .transferToOwnerByOwner(reservationMapping_id, window.klaytn.selectedAddress)
+          .encodeABI(),
+        gas: 8000000,
+      })
+      .on("receipt", async (receipt) => {
+        if (receipt.status) {
+          await axios({
+            method: "PUT",
+            url: "http://localhost:5000/my-reservation/update_passwordcheck",
+            data: { reservation_id: reservation_id, password_check: 1 },
+          }).then((res) => {
+            if (res.status === 200) {
+              Swal.fire({ icon: "success", title: "정산 완료되었습니다.", width: 600 }).then(() => {
+                window.location.reload();
+              });
+            } else {
+              console.error(res.data);
+            }
+          });
+        }
+      })
+      .on("error", (e) => {
+        console.log(e);
+      });
   };
 
   const checkPassword = async () => {
@@ -137,6 +204,7 @@ const ReserveStatusCard = ({
 
   useEffect(() => {
     checkChange();
+    checkCalculate();
   }, []);
 
   return (
@@ -157,37 +225,56 @@ const ReserveStatusCard = ({
           총 금액 : {totalPrice} KLAY
         </Text>
         <Flex justify="center">
-          <Button
-            disabled={disabledState}
-            colorScheme="purple"
-            size="md"
-            mr="1vw"
-            onClick={() => {
-              setModalIsOpen(true);
-              setHeading("비밀번호 등록");
-            }}
-          >
-            비밀번호 등록
-          </Button>
-          <Tooltip
-            hasArrow
-            label={changeLabel}
-            shouldWrapChildren
-            mt="3"
-            isDisabled={!changeDisabled}
-          >
-            <Button
-              disabled={changeDisabled}
-              colorScheme="blue"
-              size="md"
-              onClick={() => {
-                setModalIsOpen(true);
-                setHeading("비밀번호 수정");
-              }}
+          {isCalculated === true ? (
+            <Tooltip
+              hasArrow
+              label="정산되지 않은 예약에 대해서 직접 정산할 수 있습니다."
+              isDisabled={!calculateDisabled}
             >
-              비밀번호 수정
-            </Button>
-          </Tooltip>
+              <Button
+                colorScheme="purple"
+                size="lg"
+                onClick={transferToMe}
+                disabled={calculateDisabled}
+              >
+                정산하기
+              </Button>
+            </Tooltip>
+          ) : (
+            <>
+              <Button
+                disabled={disabledState}
+                colorScheme="purple"
+                size="md"
+                mr="1vw"
+                onClick={() => {
+                  setModalIsOpen(true);
+                  setHeading("비밀번호 등록");
+                }}
+              >
+                비밀번호 등록
+              </Button>
+              <Tooltip
+                hasArrow
+                label={changeLabel}
+                shouldWrapChildren
+                mt="3"
+                isDisabled={!changeDisabled}
+              >
+                <Button
+                  disabled={changeDisabled}
+                  colorScheme="blue"
+                  size="md"
+                  onClick={() => {
+                    setModalIsOpen(true);
+                    setHeading("비밀번호 수정");
+                  }}
+                >
+                  비밀번호 수정
+                </Button>
+              </Tooltip>
+            </>
+          )}
         </Flex>
         <Modal isOpen={modalIsOpen} style={modalStyle}>
           <CloseButton
