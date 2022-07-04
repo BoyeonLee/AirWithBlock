@@ -2,6 +2,18 @@ export const contractABI = [
   {
     anonymous: false,
     inputs: [
+      { indexed: true, internalType: "address", name: "owner", type: "address" },
+      { indexed: false, internalType: "uint256", name: "owner_money", type: "uint256" },
+      { indexed: true, internalType: "address", name: "buyer", type: "address" },
+      { indexed: false, internalType: "uint256", name: "buyer_money", type: "uint256" },
+    ],
+    name: "CancelReservation",
+    type: "event",
+    signature: "0xb03eafd3e5eb854e38ec8c641ecaae9888941b32d02024a5a8572d33798f5fcb",
+  },
+  {
+    anonymous: false,
+    inputs: [
       { indexed: false, internalType: "address", name: "buyer", type: "address" },
       { indexed: true, internalType: "address", name: "owner", type: "address" },
       { indexed: true, internalType: "uint256", name: "product_id", type: "uint256" },
@@ -22,6 +34,17 @@ export const contractABI = [
     name: "TransferToOwner",
     type: "event",
     signature: "0x6810a44383363f6c655b7b4bd827e3395efa504e1df1c94de2f077f101e21445",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "owner", type: "address" },
+      { indexed: false, internalType: "uint256", name: "fee", type: "uint256" },
+      { indexed: true, internalType: "uint256", name: "product_id", type: "uint256" },
+    ],
+    name: "TransferToOwnerByOwner",
+    type: "event",
+    signature: "0x80784efd5b5be95d00189121bd83bf63916d8e0903208c3e656f4e2e7832dd47",
   },
   {
     inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
@@ -65,6 +88,31 @@ export const contractABI = [
     signature: "0x39ee48f6",
   },
   {
+    inputs: [
+      { internalType: "uint256", name: "reservationId", type: "uint256" },
+      { internalType: "address", name: "buyer_address", type: "address" },
+      { internalType: "uint256", name: "percent", type: "uint256" },
+    ],
+    name: "cancelReservation",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+    payable: true,
+    signature: "0xf233b84d",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "reservationId", type: "uint256" },
+      { internalType: "address", name: "owner_address", type: "address" },
+    ],
+    name: "transferToOwnerByOwner",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+    payable: true,
+    signature: "0x8152fa46",
+  },
+  {
     inputs: [],
     name: "getBalanceOfContract",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
@@ -84,4 +132,4 @@ export const contractABI = [
   },
 ];
 
-export const contractAddress = "0xd43671a8699001586DD28f5549A7B2300CC20747";
+export const contractAddress = "0xB758eB17728052e38821abB1f7632943F70A5709";
