@@ -25,6 +25,10 @@ const ReservationCard = ({
 }) => {
   const [isPast, setIsPast] = useState(false);
   const [disabled, setDisabled] = useState(true);
+  const [cancelDisabled, setCancelDisabled] = useState(false);
+
+  const caver = new Caver(window.klaytn);
+  const contract = caver.contract.create(contractABI, contractAddress);
 
   const checkPast = () => {
     const today = new Date();
@@ -43,10 +47,11 @@ const ReservationCard = ({
     return dateString;
   };
 
-  const isTodayCheckin = () => {
+  const isToday = () => {
     const today = getDate(new Date());
     if (today === checkin) {
       setDisabled(false);
+      setCancelDisabled(true);
     }
   };
 
@@ -76,24 +81,7 @@ const ReservationCard = ({
     });
   };
 
-  const checkPassword = () => {
-    axios
-      .get("http://localhost:5000/check_password", {
-        params: { reservation_id: reservation_id, product_id: product_id },
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          console.log(res.data);
-        } else {
-          console.error(res.data);
-        }
-      });
-  };
-
   const getPassword = async () => {
-    const caver = new Caver(window.klaytn);
-    const contract = caver.contract.create(contractABI, contractAddress);
-
     axios
       .get("http://localhost:5000/check_password", {
         params: { reservation_id: reservation_id, product_id: product_id },
@@ -142,13 +130,74 @@ const ReservationCard = ({
       });
   };
 
+  const getDateDiff = (d1, d2) => {
+    const date1 = new Date(d1);
+    const date2 = new Date(d2);
+
+    const diffDate = date1.getTime() - date2.getTime();
+
+    return Math.abs(diffDate / (1000 * 60 * 60 * 24));
+  };
+
+  const cancelToContract = (percent) => {
+    Swal.fire({
+      icon: "info",
+      title: "예약 취소",
+      html: `지금 예약을 취소하시면 <b>${percent}% 환불</b> 받으실 수 있습니다.<br>취소하시겠습니까?`,
+      showCloseButton: true,
+      width: 600,
+    }).then(() => {
+      caver.klay
+        .sendTransaction({
+          type: "SMART_CONTRACT_EXECUTION",
+          from: window.klaytn.selectedAddress,
+          to: contractAddress,
+          data: contract.methods
+            .cancelReservation(reservationMapping_id, window.klaytn.selectedAddress, percent)
+            .encodeABI(),
+          gas: 8000000,
+        })
+        .on("receipt", (receipt) => {
+          if (receipt.status) {
+            axios
+              .delete(`http://localhost:5000/my-reservation/cancel/${reservation_id}`, {
+                data: { account: account },
+              })
+              .then((res) => {
+                if (res.status === 200) {
+                  Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
+                    window.location.reload();
+                  });
+                } else {
+                  console.error(res.data);
+                }
+              });
+          }
+        })
+        .on("error", (e) => {
+          console.log(e);
+        });
+    });
+  };
+
+  const cancelReservation = () => {
+    const dayDiff = getDateDiff(getDate(new Date()), checkin);
+    if (dayDiff > 7) {
+      cancelToContract(100);
+    } else if (dayDiff > 3) {
+      cancelToContract(50);
+    } else {
+      cancelToContract(30);
+    }
+  };
+
   useEffect(() => {
     checkPast();
   }, [isPast]);
 
   useEffect(() => {
-    isTodayCheckin();
-  }, [disabled]);
+    isToday();
+  }, [disabled, cancelDisabled]);
 
   return (
     <Box w="17vw" h="40vh" bg="pink.50" opacity={isPast ? "0.6" : ""}>
@@ -164,24 +213,43 @@ const ReservationCard = ({
         <Text fontSize="xl">
           예약 날짜 : {checkin} ~ {checkout}
         </Text>
-        <Tooltip
-          hasArrow
-          label="체크인 하는 날에 비밀번호를 확인할 수 있습니다."
-          shouldWrapChildren
-          mt="3"
-          isDisabled={!disabled}
-        >
-          <Button
-            colorScheme="purple"
-            size="lg"
-            display="block"
-            m="1vw auto auto auto"
-            onClick={getPassword}
-            disabled={disabled}
+        <Flex justify="center" mt="1vw">
+          <Tooltip
+            hasArrow
+            label="체크인 하는 날에 비밀번호를 확인할 수 있습니다."
+            shouldWrapChildren
+            mt="3"
+            isDisabled={!disabled}
           >
-            비밀번호 확인
-          </Button>
-        </Tooltip>
+            <Button
+              colorScheme="purple"
+              size="md"
+              display="block"
+              mr="1vw"
+              onClick={getPassword}
+              disabled={disabled}
+            >
+              비밀번호 확인
+            </Button>
+          </Tooltip>
+          <Tooltip
+            hasArrow
+            label="체크인 하는 날은 예약을 취소할 수 없습니다."
+            shouldWrapChildren
+            mt="3"
+            isDisabled={!cancelDisabled}
+          >
+            <Button
+              colorScheme="blue"
+              size="md"
+              display="block"
+              onClick={cancelReservation}
+              disabled={cancelDisabled}
+            >
+              예약 취소
+            </Button>
+          </Tooltip>
+        </Flex>
       </Box>
     </Box>
   );
