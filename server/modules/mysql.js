@@ -1,13 +1,15 @@
-const fs = require("fs");
 const mysql = require("mysql");
-const password = fs.readFileSync(".mysql_password", "utf-8");
-const { fail } = require("assert");
+
+const host = process.env.MYSQL_HOST;
+const user = process.env.MYSQL_USER;
+const password = process.env.MYSQL_PASSWORD;
+const database = process.env.MYSQL_DATABASE;
 
 const con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
+  host: host,
+  user: user,
   password: password,
-  database: "airwithblock_db",
+  database: database,
   multipleStatements: true,
 });
 

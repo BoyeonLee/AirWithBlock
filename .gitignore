@@ -3,13 +3,13 @@
 # dependencies
 node_modules
 server/mainImage
-server/.mysql_password
 truffle-contract/.private_key
 truffle-contract/deployedABI
 truffle-contract/deployedAddress
-client/.env
 server/.env
 test.js
+
+.prettierignore
 
 /.pnp
 .pnp.js

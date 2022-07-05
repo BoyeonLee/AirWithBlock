@@ -3,7 +3,7 @@ const router = express.Router();
 const crypto = require("crypto");
 const con = require("../../modules/mysql");
 
-const passphrase = process.env.passphrase;
+const passphrase = process.env.PASSPHRASE;
 
 router.post("/", async (req, res) => {
   try {
