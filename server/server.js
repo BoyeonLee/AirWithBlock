@@ -59,7 +59,7 @@ app.use("/my-reservation/check_password", checkPasswordRouter);
 app.use("/my-reservation/get_password", getPasswordRouter);
 app.use("/my-reservation/update_passwordcheck", updatePasswordcheckRouter);
 
-const port = 5000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
