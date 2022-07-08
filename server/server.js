@@ -36,7 +36,8 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use("/", mainRouter);
+
+app.use("/main", mainRouter);
 app.use("/get_keys", getKeysRouter);
 
 app.use("/detail", detailRouter);

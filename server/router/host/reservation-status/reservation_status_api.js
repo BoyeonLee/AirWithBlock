@@ -23,6 +23,10 @@ router.get("/", async (req, res) => {
       if (join_err) {
         res.status(500).send({ message: join_err });
       } else {
+        if (join_rows.length === 0) {
+          res.status(200).send({ reserveStatusArray: [] });
+          return;
+        }
         for (let i = 0; i < join_rows.length; i++) {
           const data = fs.readFileSync(join_rows[i].product_image);
           const b64 = data.toString("base64");

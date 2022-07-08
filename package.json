@@ -1,12 +1,13 @@
 {
-  "name": "airnblockb_with_klaytn",
+  "name": "airwithblock",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "server": "cd server && nodemon server",
     "client": "cd client && npm start",
-    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "test": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",

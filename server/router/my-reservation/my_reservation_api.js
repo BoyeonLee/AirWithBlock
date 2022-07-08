@@ -22,6 +22,10 @@ router.get("/", async (req, res) => {
       if (err) {
         res.status(500).send({ message: err });
       } else {
+        if (rows.length === 0) {
+          res.status(200).send({ reservationArray: [] });
+          return;
+        }
         for (let i = 0; i < rows.length; i++) {
           const data = fs.readFileSync(rows[i].product_image);
           const b64 = data.toString("base64");

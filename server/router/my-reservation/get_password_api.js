@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
           if (err) {
             res.status(400).send({ message: err });
           } else {
-            const passphrase = process.env.passphrase;
+            const passphrase = process.env.PASSPHRASE;
             const privateKey = rows[0].private_key;
 
             const key = crypto.createPrivateKey({

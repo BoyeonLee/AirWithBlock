@@ -13,6 +13,10 @@ router.get("/", async (req, res) => {
       if (err) {
         res.status(500).send({ message: err });
       } else {
+        if (rows.length === 0) {
+          res.status(200).send({ myHouseArray: [] });
+          return;
+        }
         for (let i = 0; i < rows.length; i++) {
           const product_id = rows[i].id;
           const data = fs.readFileSync(rows[i].product_image);
