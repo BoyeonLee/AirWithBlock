@@ -13,8 +13,8 @@ import {
 } from "@chakra-ui/react";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import { axiosInstance } from "../config";
 
 import Caver from "caver-js";
 import { contractABI, contractAddress } from "./../contract/transferContract";
@@ -30,6 +30,7 @@ const ReserveStatusCard = ({
   checkout,
   totalPrice,
   disabled,
+  getReserveStatus,
 }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [password1, setPassword1] = useState("");
@@ -80,8 +81,8 @@ const ReserveStatusCard = ({
 
   const checkCalculate = () => {
     if (new Date(getDate(new Date())) > new Date(checkin)) {
-      axios
-        .get("http://localhost:5000/host/reservation-status/calculate", {
+      axiosInstance
+        .get("/host/reservation-status/calculate", {
           params: { reservation_id: reservation_id },
         })
         .then((res) => {
@@ -107,14 +108,14 @@ const ReserveStatusCard = ({
       })
       .on("receipt", async (receipt) => {
         if (receipt.status) {
-          await axios({
+          await axiosInstance({
             method: "PUT",
-            url: "http://localhost:5000/my-reservation/update_passwordcheck",
+            url: "/my-reservation/update_passwordcheck",
             data: { reservation_id: reservation_id, password_check: 1 },
           }).then((res) => {
             if (res.status === 200) {
               Swal.fire({ icon: "success", title: "정산 완료되었습니다.", width: 600 }).then(() => {
-                window.location.reload();
+                setCalculateDisabled(true);
               });
             } else {
               console.error(res.data);
@@ -142,16 +143,16 @@ const ReserveStatusCard = ({
         password: password1,
       };
 
-      await axios({
+      await axiosInstance({
         method: "POST",
-        url: "http://localhost:5000/host/reservation-status/password",
+        url: "/host/reservation-status/password",
         data: data,
       }).then((res) => {
         if (res.status === 200) {
           Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
             setModalIsOpen(false);
             setDisabledState(true);
-            window.location.reload();
+            checkChange();
           });
         } else {
           console.error(res.data);
@@ -175,9 +176,9 @@ const ReserveStatusCard = ({
         password: password1,
       };
 
-      await axios({
+      await axiosInstance({
         method: "PUT",
-        url: "http://localhost:5000/host/reservation-status/change_password",
+        url: "/host/reservation-status/change_password",
         data: data,
       }).then((res) => {
         if (res.status === 200) {

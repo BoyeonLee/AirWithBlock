@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import ProductCard from "./../components/ProductCard";
 import { Grid } from "@chakra-ui/react";
-import axios from "axios";
+import { axiosInstance } from "../config";
 
 const Main = ({ account }) => {
   const [productArray, setProductArray] = useState([]);
 
   const getProductInfo = async () => {
-    await axios({
+    await axiosInstance({
       method: "GET",
-      url: "http://localhost:5000/",
+      url: "/main",
     }).then((res) => {
       if (res.status === 200) {
         setProductArray(res.data.infoArray);

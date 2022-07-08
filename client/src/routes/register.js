@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -13,11 +14,13 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import Postcode from "./../components/Postcode";
-import axios from "axios";
+import { axiosInstance } from "../config";
 import Swal from "sweetalert2";
 import imageCompression from "browser-image-compression";
 
 const Register = ({ account }) => {
+  const navigate = useNavigate();
+
   const [imageUrl, setImageUrl] = useState("");
   const imgRef = useRef();
 
@@ -80,16 +83,16 @@ const Register = ({ account }) => {
     formData.append("detailed_addr", detailedAddr);
     formData.append("price", price);
 
-    await axios({
+    await axiosInstance({
       method: "POST",
-      url: "http://localhost:5000/host/register",
+      url: "/host/register",
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     }).then((res) => {
       if (res.status === 200) {
         const id = res.data.product_id;
         Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
-          window.location.href = `/detail/${id}`;
+          navigate(`/detail/${id}`);
         });
       } else {
         console.error(res.data);
@@ -98,7 +101,7 @@ const Register = ({ account }) => {
   };
 
   return (
-    <Box w="42vw" h="80vh" p="1vw" borderWidth="8px" borderColor="pink.50" borderRadius="1vw">
+    <Box w="45vw" h="80vh" p="1vw" borderWidth="8px" borderColor="pink.50" borderRadius="1vw">
       <Box textAlign="center">
         <Text fontSize="4xl">집 등록하기</Text>
       </Box>

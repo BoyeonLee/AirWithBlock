@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -14,11 +14,13 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import Postcode from "./../components/Postcode";
-import axios from "axios";
+import { axiosInstance } from "../config";
 import Swal from "sweetalert2";
 import imageCompression from "browser-image-compression";
 
 const Modify = ({ account }) => {
+  const navigate = useNavigate();
+
   const product_id = useParams().product_id;
   const imgRef = useRef();
 
@@ -63,8 +65,8 @@ const Modify = ({ account }) => {
   };
 
   const getProductInfo = () => {
-    axios
-      .get(`http://localhost:5000/host/my-house/modify/${product_id}`, {
+    axiosInstance
+      .get(`/host/my-house/modify/${product_id}`, {
         params: { account: account },
       })
       .then((res) => {
@@ -101,16 +103,16 @@ const Modify = ({ account }) => {
     formData.append("detailed_addr", detailedAddr);
     formData.append("price", price);
 
-    await axios({
+    await axiosInstance({
       method: "PUT",
-      url: `http://localhost:5000/host/my-house/modify/${product_id}`,
+      url: `/host/my-house/modify/${product_id}`,
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     }).then((res) => {
       if (res.status === 200) {
         const id = res.data.product_id;
         Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
-          window.location.href = `/detail/${id}`;
+          navigate(`/detail/${id}`);
         });
       } else {
         console.error(res.data);

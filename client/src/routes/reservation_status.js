@@ -1,21 +1,19 @@
 import { useState, useEffect } from "react";
 import ReserveStatusCard from "./../components/ReserveStatusCard";
 import { Heading, Grid } from "@chakra-ui/react";
-import axios from "axios";
+import { axiosInstance } from "../config";
 
 const ReservationStatus = ({ account }) => {
   const [reserveStatusArray, setReserveStatusArray] = useState([]);
 
   const getReserveStatus = () => {
-    axios
-      .get("http://localhost:5000/host/reservation-status", { params: { account: account } })
-      .then((res) => {
-        if (res.status === 200) {
-          setReserveStatusArray(res.data.reserveStatusArray);
-        } else {
-          console.error(res.data);
-        }
-      });
+    axiosInstance.get("/host/reservation-status", { params: { account: account } }).then((res) => {
+      if (res.status === 200) {
+        setReserveStatusArray(res.data.reserveStatusArray);
+      } else {
+        console.error(res.data);
+      }
+    });
   };
 
   useEffect(() => {
@@ -41,6 +39,7 @@ const ReservationStatus = ({ account }) => {
                 checkout={v.checkout}
                 totalPrice={v.totalPrice}
                 disabled={v.disabled}
+                getReserveStatus={getReserveStatus}
               />
             );
           })}

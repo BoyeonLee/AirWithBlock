@@ -1,20 +1,18 @@
 import { useState, useEffect } from "react";
 import { Grid, Heading } from "@chakra-ui/react";
 import ReservationCard from "./../components/ReservationCard";
-import axios from "axios";
+import { axiosInstance } from "../config";
 
 const MyReservation = ({ account }) => {
   const [reservationArray, setReservationArray] = useState([]);
   const getReservation = () => {
-    axios
-      .get("http://localhost:5000/my-reservation", { params: { account: account } })
-      .then((res) => {
-        if (res.status === 200) {
-          setReservationArray(res.data.reservationArray);
-        } else {
-          console.error(res.data);
-        }
-      });
+    axiosInstance.get("/my-reservation", { params: { account: account } }).then((res) => {
+      if (res.status === 200) {
+        setReservationArray(res.data.reservationArray);
+      } else {
+        console.error(res.data);
+      }
+    });
   };
 
   useEffect(() => {
@@ -39,6 +37,7 @@ const MyReservation = ({ account }) => {
                 checkin={v.checkin}
                 checkout={v.checkout}
                 password_check={v.password_check}
+                getReservation={getReservation}
               />
             );
           })}

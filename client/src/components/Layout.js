@@ -1,7 +1,9 @@
 import { Stack, Flex, Box, Text } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Layout({ account, children }) {
+  const navigate = useNavigate();
+
   const str1 = account.substring(0, 5);
   const str2 = account.slice(-3);
   const account_str = str1 + "..." + str2;
@@ -11,7 +13,7 @@ function Layout({ account, children }) {
       <Flex bg="pink.50" pr="30vh" pl="30vh" justify="space-between" alignItems="center" h="15vh">
         <Box
           onClick={() => {
-            window.location.replace("/");
+            navigate("/");
           }}
           cursor="pointer"
         >

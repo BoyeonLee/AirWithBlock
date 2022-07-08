@@ -1,21 +1,19 @@
 import { useState, useEffect } from "react";
 import { Heading, Grid, Box, Flex, Text, Button } from "@chakra-ui/react";
 import MyHouseCard from "./../components/MyHouseCard";
-import axios from "axios";
+import { axiosInstance } from "../config";
 
 const MyHouse = ({ account }) => {
   const [myHouseArray, setMyHouseArray] = useState([]);
 
   const getMyHouseArray = () => {
-    axios
-      .get("http://localhost:5000/host/my-house", { params: { account: account } })
-      .then((res) => {
-        if (res.status === 200) {
-          setMyHouseArray(res.data.myHouseArray);
-        } else {
-          console.error(res.data);
-        }
-      });
+    axiosInstance.get("/host/my-house", { params: { account: account } }).then((res) => {
+      if (res.status === 200) {
+        setMyHouseArray(res.data.myHouseArray);
+      } else {
+        console.error(res.data);
+      }
+    });
   };
 
   useEffect(() => {
@@ -37,6 +35,7 @@ const MyHouse = ({ account }) => {
                 name={v.name}
                 basic_addr={v.basic_addr}
                 detailed_addr={v.detailed_addr}
+                getMyHouseArray={getMyHouseArray}
               />
             );
           })}

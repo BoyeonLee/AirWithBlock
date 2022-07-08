@@ -5,11 +5,11 @@ const Location = ({ basicAddr }) => {
   useEffect(() => {
     var container = document.getElementById("map");
 
-    var geocoder = new kakao.maps.services.Geocoder();
+    var geocoder = new window.kakao.maps.services.Geocoder();
     geocoder.addressSearch(basicAddr, function (result, status) {
-      if (status === kakao.maps.services.Status.OK) {
-        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-        var marker = new kakao.maps.Marker({
+      if (status === window.kakao.maps.services.Status.OK) {
+        var coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
+        var marker = new window.kakao.maps.Marker({
           map: map,
           position: coords,
         });

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Box, Flex, Text, Input, Button } from "@chakra-ui/react";
 import Swal from "sweetalert2";
 import Location from "./../components/Location";
-import axios from "axios";
+import { axiosInstance } from "../config";
 
 import Caver from "caver-js";
 import { contractABI, contractAddress } from "./../contract/transferContract";
@@ -15,6 +15,8 @@ import ko from "date-fns/locale/ko";
 registerLocale("ko", ko);
 
 const Detail = ({ account }) => {
+  const navigate = useNavigate();
+
   const product_id = useParams().product_id;
   const [ownerAccount, setOwnerAccount] = useState("");
   const [checkIn, setCheckIn] = useState(new Date());
@@ -34,9 +36,9 @@ const Detail = ({ account }) => {
   const [checkOutArray, setCheckOutArray] = useState([]);
 
   const getProductDetail = async () => {
-    await axios({
+    await axiosInstance({
       method: "GET",
-      url: `http://localhost:5000/detail/${product_id}`,
+      url: `/detail/${product_id}`,
     }).then((res) => {
       if (res.status === 200) {
         setImage(res.data.infoArray[0].image);
@@ -93,6 +95,10 @@ const Detail = ({ account }) => {
   const checkTotalPrice = () => {
     const check_in = new Date(getDate(checkIn));
     const check_out = new Date(getDate(checkOut));
+    if (check_in >= check_out) {
+      Swal.fire({ icon: "error", title: "체크아웃 날짜를 다시 설정해주십시오.", width: 600 });
+      return;
+    }
     const difference = Math.abs(check_out - check_in);
     const days = difference / (1000 * 3600 * 24);
     setReservationDay(days);
@@ -141,14 +147,14 @@ const Detail = ({ account }) => {
             reservation_day: reservationDay,
           };
 
-          await axios({
+          await axiosInstance({
             method: "POST",
-            url: "http://localhost:5000/reserve",
+            url: "/reserve",
             data: data,
           }).then((res) => {
             if (res.status === 200) {
               Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
-                window.location.href = "/my-reservation";
+                navigate("/my-reservation");
               });
             } else {
               console.error(res.data);

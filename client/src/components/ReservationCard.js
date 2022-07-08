@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Box, Flex, Text, Button, Tooltip } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import Swal from "sweetalert2";
+import { axiosInstance } from "../config";
+import axios from "axios";
 
 import Caver from "caver-js";
 import { contractABI, contractAddress } from "./../contract/transferContract";
@@ -22,6 +23,7 @@ const ReservationCard = ({
   checkin,
   checkout,
   password_check,
+  getReservation,
 }) => {
   const [isPast, setIsPast] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -62,30 +64,18 @@ const ReservationCard = ({
       reservation_id: reservation_id,
     };
 
-    axios
-      .get("http://localhost:5000/my-reservation/get_password", { params: { data: data } })
-      .then((res) => {
-        if (res.status === 200) {
-          if (password_check === 0) {
-            Swal.fire({
-              icon: "success",
-              title: `비밀번호 : ${res.data.password}`,
-              width: 600,
-            }).then(() => {
-              window.location.reload();
-            });
-          } else {
-            Swal.fire({ icon: "success", title: `비밀번호 : ${res.data.password}`, width: 600 });
-          }
-        } else {
-          console.error(res.data);
-        }
-      });
+    axiosInstance.get("/my-reservation/get_password", { params: { data: data } }).then((res) => {
+      if (res.status === 200) {
+        Swal.fire({ icon: "success", title: `비밀번호 : ${res.data.password}`, width: 600 });
+      } else {
+        console.error(res.data);
+      }
+    });
   };
 
   const getPassword = async () => {
-    axios
-      .get("http://localhost:5000/my-reservation/check_password", {
+    axiosInstance
+      .get("/my-reservation/check_password", {
         params: { reservation_id: reservation_id, product_id: product_id },
       })
       .then((res) => {
@@ -107,12 +97,13 @@ const ReservationCard = ({
               })
               .on("receipt", async (receipt) => {
                 if (receipt.status) {
-                  await axios({
+                  await axiosInstance({
                     method: "PUT",
-                    url: "http://localhost:5000/my-reservation/update_passwordcheck",
+                    url: "/my-reservation/update_passwordcheck",
                     data: { reservation_id: reservation_id, password_check: 1 },
                   }).then((res) => {
                     if (res.status === 200) {
+                      getReservation();
                       getPasswordFromServer();
                     } else {
                       console.error(res.data);
@@ -161,14 +152,14 @@ const ReservationCard = ({
         })
         .on("receipt", (receipt) => {
           if (receipt.status) {
-            axios
-              .delete(`http://localhost:5000/my-reservation/cancel/${reservation_id}`, {
+            axiosInstance
+              .delete(`/my-reservation/cancel/${reservation_id}`, {
                 data: { account: account },
               })
               .then((res) => {
                 if (res.status === 200) {
                   Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
-                    window.location.reload();
+                    getReservation();
                   });
                 } else {
                   console.error(res.data);

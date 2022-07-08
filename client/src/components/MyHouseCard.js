@@ -1,19 +1,29 @@
 import { Box, Flex, Text, Button } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { axiosInstance } from "../config";
 
-const MyHouseCard = ({ account, product_id, image, name, basic_addr, detailed_addr }) => {
+const MyHouseCard = ({
+  account,
+  product_id,
+  image,
+  name,
+  basic_addr,
+  detailed_addr,
+  getMyHouseArray,
+}) => {
+  const navigate = useNavigate();
+
   const deleteProduct = () => {
-    axios
-      .delete(`http://localhost:5000/host/my-house/delete/${product_id}`, {
+    axiosInstance
+      .delete(`/host/my-house/delete/${product_id}`, {
         data: { account: account },
       })
       .then((res) => {
         if (res.status === 200) {
           if (res.data.message) {
             Swal.fire({ icon: "success", title: res.data.message, width: 600 }).then(() => {
-              window.location.reload();
+              getMyHouseArray();
             });
           } else {
             Swal.fire({ icon: "error", title: res.data.unable_message, width: 600 });
@@ -46,7 +56,7 @@ const MyHouseCard = ({ account, product_id, image, name, basic_addr, detailed_ad
             display="block"
             mr="1vh"
             onClick={() => {
-              window.location.href = `/host/modify/${product_id}`;
+              navigate(`/host/modify/${product_id}`);
             }}
           >
             수정하기

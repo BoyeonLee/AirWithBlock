@@ -10,7 +10,7 @@ import ReservationStatus from "./routes/reservation_status";
 import MyHouse from "./routes/my_house";
 import Modify from "./routes/modify";
 import Swal from "sweetalert2";
-import axios from "axios";
+import { axiosInstance } from "./config";
 
 function App() {
   const [account, setAccount] = useState("");
@@ -26,9 +26,9 @@ function App() {
         const account = await window.klaytn.enable();
         setAccount(account[0]);
 
-        await axios({
+        await axiosInstance({
           method: "POST",
-          url: "http://localhost:5000/get_keys",
+          url: "/get_keys",
           data: { account: account[0] },
         }).then((res) => {
           if (res.status === 200) {
