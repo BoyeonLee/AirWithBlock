@@ -50,3 +50,36 @@ Airbnb With Blockchain의 줄임말인 **AirWithBlock** 입니다. 자신의 집
 - Frontend는 **React**, Backend는 **Node.js**, Database는 **MYSQL**을 이용했습니다.
 - CSS는 **Chakra-ui**를 이용했습니다.
 - 배포는 **Heroku**를 이용했습니다.
+
+## 6. 진행 기간
+- 2022-06-13 ~ 2022-07-03
+
+## 7. 버전
+- 1.0
+
+## 8. 데모
+### - 집 등록하기
+![집 등록_gif](https://user-images.githubusercontent.com/78004477/178173561-69168f19-ab93-41b9-b7b9-8cf767503212.gif)
+
+### - 집 정보 수정 및 삭제하기
+![집 수정_삭제_gif](https://user-images.githubusercontent.com/78004477/178173689-102ceeb7-1b2f-417d-8471-78160071231f.gif)
+
+### - 집 예약하기
+![집 예약_gif](https://user-images.githubusercontent.com/78004477/178173757-17dc6479-6c7a-4cfb-821c-456484dbf95d.gif)
+
+### - 집 예약 취소하기
+![예약 취소_gif](https://user-images.githubusercontent.com/78004477/178173813-86ce7406-43e5-40f5-8079-3650807fcfa9.gif)
+
+### - 집 비밀번호 등록 및 확인하기
+![비번 등록 및 확인_gif](https://user-images.githubusercontent.com/78004477/178173874-1689cfb9-251c-4f50-86df-129c263a7f42.gif)
+
+### - 집 비밀번호 수정하기
+![비번 수정_gif](https://user-images.githubusercontent.com/78004477/178173924-dcd35e6f-e5e6-4437-83ac-f88b065fddc7.gif)
+
+### - 정산하기
+![예약 정산_gif](https://user-images.githubusercontent.com/78004477/178173964-6bcd47ec-e360-4027-b5ca-c2314ddb6161.gif)
+
+## 9. 추가로 구현하고 싶은 부분
+- 알림 기능 : 게스트가 예약할 때, 호스트가 비밀번호를 입력할 때 호스트와 게스트에게 알람이 떠 바로 알게끔 하고 싶습니다.
+- 사용자 계정의 public_key, private_key 가지고 와서 비밀번호 암호화, 복호화 하기
+
