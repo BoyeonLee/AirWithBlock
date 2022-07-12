@@ -36,6 +36,8 @@ Airbnb With Blockchain의 줄임말인 **AirWithBlock** 입니다. 자신의 집
 - 게스트가 집 비밀번호를 확인하면 Smart-Contract에서 호스트의 계좌로 송금합니다.
 
 ## 4. 프로젝트 구성도
+- [API 명세서](https://boyeonsprojectnote.notion.site/b065a270129b4a0488667b430edeeb59?v=177dadfa764e47188b1fde09dffc6050)
+
 - [DB Diagram](https://dbdiagram.io/d/62aff67469be0b672cfd568d) <br>
 ![AirWithBlock_db](https://user-images.githubusercontent.com/78004477/178170860-cae73bfc-4ada-494a-b8f0-0d4d2dc7ce76.png)
 
